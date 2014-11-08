@@ -4,6 +4,13 @@
   @import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono);
 
 
+/* css reset */
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
 /* scroll bars in chrome */
 
   ::-webkit-scrollbar {
