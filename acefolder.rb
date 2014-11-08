@@ -9,6 +9,9 @@ use Rack::Auth::Basic, "Restricted Area" do |username, password|
   username == 'demo' and password == 'scaffold'
 end
 
+def legal_files
+end
+
 get '/' do
   File.read( "public/index.html" )
 end
