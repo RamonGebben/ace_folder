@@ -1,6 +1,9 @@
 require 'sinatra'
 require 'json'
 
+# set to whichever folder you want to edit
+set :acefolder, 'public'
+
 use Rack::Auth::Basic, "Restricted Area" do |username, password|
   username == 'demo' and password == 'scaffold'
 end
@@ -10,15 +13,14 @@ get '/' do
 end
 
 get '/structure' do
-  Dir.glob("/home/ralf/nextgen/**/*").reject{ |fn| File.directory?(fn) }.collect{ |c| c.gsub("/home/ralf/nextgen/", "") }.to_json
+  Dir.glob( settings.acefolder + "/**/*").reject{ |fn| File.directory?(fn) }.collect{ |c| settings.acefolder + '/', "") }.to_json
 end
 
 get '/file/*' do
-  # the last gsub keeps it within the directory
-  File.read( "/home/ralf/nextgen/" + params[:splat].first.gsub("..","") )
+  File.read( settings.acefolder + params[:splat].first.gsub("..","") )
 end
 
 put '/file/*' do
-  File.write( "/home/ralf/nextgen/" + params[:splat].first.gsub("..",""), request.body.read.to_s )
+  File.write( settings.acefolder + params[:splat].first.gsub("..",""), request.body.read.to_s )
   "OK"
 end

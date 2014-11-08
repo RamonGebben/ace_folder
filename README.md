@@ -2,9 +2,13 @@
 
 This is a scaffold use this as an starting point.
 
+## Configuring
 
-## Setting up
+ * open acefolder.rb in your favorite editor
+ * change the seting which folder to edit
+
+
+## Launch
 
     bundler
-
-    ruby acefolder.rd
+    ruby acefolder.rb
