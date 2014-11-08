@@ -1,0 +1,99 @@
+/* Ubuntu Fonts */
+
+  @import url(http://fonts.googleapis.com/css?family=Ubuntu+Condensed);
+  @import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono);
+
+
+/* scroll bars in chrome */
+
+  ::-webkit-scrollbar {
+    height: 2px;
+    width: 2px;
+    background: #000;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: white;
+    -webkit-border-radius: 0;
+    -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: #000;
+  }
+
+/* application styles */
+
+  body {
+    background-color: #ccc;
+    font-family: Ubuntu Condensed, sans-serif;
+  }
+
+  #editor {
+    position: fixed;
+    top: 30px;
+    left: 200px;
+    right: 60px;
+    bottom: 0px;
+    font-family: 'Ubuntu Mono', monospace;
+  }
+
+  #files {
+    position: fixed;
+    top: -10px;
+    left: 0px;
+    width: 200px;
+    font-size: 14px;
+    bottom: 0px;
+    overflow: auto;
+    text-align: right;
+    background-image: url(seamless_paper_texture.png);
+  }
+
+  #nav {
+    position: fixed; top: 0px; left: 200px; height: 30px; width: 100%;
+    display: block;
+    font-size: 20px; line-height: 30px;
+    color: white;
+    background-color: #33b062;
+    padding: 0px 10px 0px 10px;
+    text-shadow: 0px 0px 2px rgba(0,100,0,0.7);
+    border: 0px none;
+    margin: 0;
+    font-family: 'Ubuntu Condensed', sans-serif;
+  }
+
+  #nav.modified {
+    background-color: #b0334e;
+  }
+
+  #files .folder { font-weight: bold; margin-top: 10px; margin-bottom: 4px; background-color: white; font-size: 16px; line-height: 30px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px; }
+  #files .file { padding: 2px 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #files .file:hover {  color: blue; cursor: pointer; text-decoration: underline }
+  #files .file.selected { line-height: 16px; font-size: 16px; color: maroon }
+
+/* box shadows */
+
+  #nav {z-index: 100; box-shadow: 0px 0px 10px rgba(0,50,0,0.8); }
+  #togetherjs-dock { z-index: 150; box-shadow: 0px 0px 10px rgba(0,50,0,0.8) }
+  #files { z-index: 150; box-shadow: 0px 0px 10px rgba(250,250,250,1)}
+
+/* togetherjs hacks */
+
+  #togetherjs-share-button, #togetherjs-menu-end, #togetherjs-dock-anchor {
+   display: none;
+  }
+
+  #togetherjs-dock.togetherjs-dock-right {
+    right: 0px;
+    height: 100%;
+    border-radius: 0px;
+  }
+
+
+  #togetherjs-dock {
+    position: fixed;
+    top: -1px;
+    right: -10px;
+    bottom: 0px;
+  }
