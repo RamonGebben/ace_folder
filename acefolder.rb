@@ -2,7 +2,7 @@ require 'sinatra'
 require 'json'
 
 use Rack::Auth::Basic, "Restricted Area" do |username, password|
-  username == 'relay42' and password == 'tablesoccer'
+  username == 'demo' and password == 'scaffold'
 end
 
 get '/' do
@@ -10,7 +10,7 @@ get '/' do
 end
 
 get '/structure' do
-  Dir.glob("/home/ralf/nextgen/**/*").reject{ |fn| File.directory?(fn) }.collect{ |c| c.gsub("/home/ralf/nextgen/", "") }.to_json  	
+  Dir.glob("/home/ralf/nextgen/**/*").reject{ |fn| File.directory?(fn) }.collect{ |c| c.gsub("/home/ralf/nextgen/", "") }.to_json
 end
 
 get '/file/*' do
