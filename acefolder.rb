@@ -10,7 +10,7 @@ use Rack::Auth::Basic, "Restricted Area" do |username, password|
 end
 
 get '/' do
-  File.read( "/home/ralf/Projects/ace_folder/public/index.html" )
+  File.read( "public/index.html" )
 end
 
 get '/structure' do
