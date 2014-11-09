@@ -1,0 +1,35 @@
+
+/* Icon font */
+@font-face {
+  font-family: 'icon';
+  src:url('fonts/icomoon.eot?-pqk25');
+  src:url('fonts/icomoon.eot?#iefix-pqk25') format('embedded-opentype'),
+    url('fonts/icomoon.woff?-pqk25') format('woff'),
+    url('fonts/icomoon.ttf?-pqk25') format('truetype'),
+    url('fonts/icomoon.svg?-pqk25#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+.folder:before {
+  font-family: icon;
+  float: left;
+  padding: 0 10px;
+  content: "\f115";
+}
+
+.file:before {
+  font-family: icon;
+  float: left;
+  padding: 0 10px;
+  content: "\f036";
+  line-height: 1.4;
+}
+
+.file[data-url*="css"]:before { content: "\f13c"; }
+.file[data-url*="html"]:before { content: "\f13c"; }
+.file[data-url*="md"]:before { content: "\e601"; }
+.file[data-url*="coffee"]:before { content: "\e600"; }
+.file[data-url*="rb"]:before { content: "\e602"; }
+.file[data-url*="png"]:before, .file[data-url*=".jpg"]:before { content: "\f03e"; }
