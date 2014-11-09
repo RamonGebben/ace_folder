@@ -3,13 +3,9 @@ require 'json'
 
 # set to whichever folder you want to edit
 set :acefolder, 'demo/'
-set :file_type_whitelist, "css js html md".split(' ')
 
 use Rack::Auth::Basic, "Restricted Area" do |username, password|
   username == 'demo' and password == 'scaffold'
-end
-
-def legal_files
 end
 
 get '/' do

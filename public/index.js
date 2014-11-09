@@ -17,7 +17,8 @@ var ace_modes = {
   "scss" : "scss",
   "markdown" : "markdown",
   "md" : "markdown",
-  "xml" : "liquid"
+  "xml" : "liquid",
+  "rb"  : "ruby"  
 };
 
 var currentFile;
