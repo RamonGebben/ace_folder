@@ -17,10 +17,10 @@
   padding: 0 10px;
   content: "\f114";
 }
-/*
+
 .folder.open h3:before {
   content: "\f115";
-}*/
+}
 
 .file:before {
   font-family: icon;

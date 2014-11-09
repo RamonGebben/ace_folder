@@ -25,14 +25,8 @@ var oldFile;
 var modified;
 
 function openFolder() {
-  $('.folder').click(function(){
-    var files = $('.folder .file');
-    var height = 0;
-    $.each( files, function( file, piiza ){
-      console.log(file);
-      height = height + file.innerHeight;
-      console.log(height);
-    });
+  $('.folder h3').click(function(){
+    $( this ).parent().toggleClass('open');
   });
 }
 
@@ -98,6 +92,7 @@ var save = function(){
 
     folders.forEach( function( fd ){
       // $( "<div class='folder'>" ).text( fd.replace('_','') ).appendTo( "#files" );
+      // Maybe do this a better cause this breaks
       $( "<div class='folder'>" ).append( $( "<h3>" + fd.replace('_','') + "</h3>") ).appendTo( "#files" );
       files.forEach( function( ff ){
         var fn = ff.split('/');

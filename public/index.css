@@ -10,6 +10,7 @@
 html, body {
   margin: 0;
   padding: 0;
+  background: url("bg.png");
 }
 
 /* scroll bars in chrome */
@@ -45,6 +46,7 @@ body {
 #editor {
   top: 30px; left: 200px; right: 60px; bottom: 0px;
   font-family: 'Ubuntu Mono', monospace;
+  opacity: 0.8;
 }
 
 #nav {
@@ -86,15 +88,15 @@ body {
   line-height: 30px;
   white-space: nowrap;
   text-overflow: ellipsis;
+  cursor: pointer;
 }
 
 .folder {
-  /*height: 3em;*/
   overflow: hidden;
 }
 
-.folder.open {
-  height: auto;
+.folder.open .file {
+  display: block;
 }
 
 .file {
@@ -103,6 +105,7 @@ body {
   overflow: hidden;
   color: #ccc;
   text-overflow: ellipsis;
+  display: none;
 }
 
 .file:hover {
