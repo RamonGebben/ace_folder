@@ -1,3 +1,6 @@
+
+// Setting up ACE
+
 var editor = ace.edit( "editor" );
 var session = editor.getSession();
 
@@ -18,7 +21,7 @@ var ace_modes = {
   "markdown" : "markdown",
   "md" : "markdown",
   "xml" : "liquid",
-  "rb"  : "ruby"  
+  "rb"  : "ruby"
 };
 
 var currentFile;
@@ -79,6 +82,10 @@ var save = function(){
     }
   });
 
+  function Structure(){
+    this.files = [];
+  }
+  Structure.prototype.refresh = function(){
   $.get( "/structure", function( data ) {
     var files = JSON.parse( data );
     var rootfiles = [];
@@ -120,6 +127,14 @@ var save = function(){
     });
 
   });
+  
+  }
+
+
+  function structure(){
+
+  }
+
 
 
   TogetherJS.hub.on("fileChange", function (msg) {
