@@ -1,7 +1,7 @@
 var editor = ace.edit( "editor" );
 var session = editor.getSession();
 
-editor.setTheme( "ace/theme/monokai" );
+editor.setTheme( "ace/theme/merbivore" );
 editor.setFontSize( "16px" );
 editor.setShowPrintMargin( false );
 editor.setReadOnly( true );
@@ -13,8 +13,13 @@ session.setUseSoftTabs( true );
 
 var ace_modes = {
   "yml" : "yaml",
-  "html" : "liquid",
+  "html" : "html",
   "scss" : "scss",
+  "css" : "css",
+  "less" : "lss",
+  "js" : "javascript",
+  "coffee" : "coffee",
+  "rb" : "ruby",
   "markdown" : "markdown",
   "md" : "markdown",
   "xml" : "liquid"

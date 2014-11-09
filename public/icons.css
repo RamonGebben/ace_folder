@@ -36,3 +36,9 @@
 .file[data-url*="coffee"]:before { content: "\e600"; }
 .file[data-url*="rb"]:before { content: "\e602"; }
 .file[data-url*="png"]:before, .file[data-url*=".jpg"]:before { content: "\f03e"; }
+
+.file[data-url*="js"]:before {
+  content: "JS";
+  font-family: Helvetica;
+  font-weight: 900;
+}
