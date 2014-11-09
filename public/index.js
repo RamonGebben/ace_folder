@@ -18,18 +18,30 @@ var ace_modes = {
   "markdown" : "markdown",
   "md" : "markdown",
   "xml" : "liquid"
-}
+};
 
 var currentFile;
 var oldFile;
 var modified;
+
+function openFolder() {
+  $('.folder').click(function(){
+    var files = $('.folder .file');
+    var height = 0;
+    $.each( files, function( file, piiza ){
+      console.log(file);
+      height = height + file.innerHeight;
+      console.log(height);
+    });
+  });
+}
 
 var update = function(){
 
   if( oldFile !== currentFile ){
     editor.setReadOnly( false );
     session.setMode( "ace/mode/" + ( ace_modes[ currentFile.split('.')[1] ] || "text" ));
-    $('#nav').text( currentFile )
+    $('#nav').text( currentFile );
     $('#files .file').removeClass('selected');
     $('#files .file').each( function(i,e){
       if( $(e).data('url') === currentFile ){
@@ -43,7 +55,7 @@ var update = function(){
     $('#nav').removeClass('modified');
   }
   oldFile =  currentFile;
-}
+};
 
 var save = function(){
   if( currentFile ){
@@ -57,7 +69,7 @@ var save = function(){
       TogetherJS.send({type: "fileChange", currentFile: currentFile, modified: modified });
       update();
     }
-  }
+  };
 
   var there_was_input;
   $(document).bind('keydown', function(e) {
@@ -81,14 +93,17 @@ var save = function(){
     });
 
     folders.sort();
-    $( "<div class='folder'>" ).text( "ROOT" ).appendTo( "#files" );
+    // Dunno why we need this
+    // $( "<div class='folder'>" ).text( "ROOT" ).appendTo( "#files" );
+
     folders.forEach( function( fd ){
-      $( "<div class='folder'>" ).text( fd.replace('_','') ).appendTo( "#files" );
+      // $( "<div class='folder'>" ).text( fd.replace('_','') ).appendTo( "#files" );
+      $( "<div class='folder'>" ).append( $( "<h3>" + fd.replace('_','') + "</h3>") ).appendTo( "#files" );
       files.forEach( function( ff ){
         var fn = ff.split('/');
         if( fn.slice(0,fn.length-1).join('/') === fd ){
           fn = fn[fn.length-1].split('.');
-          $( "<div class='file' data-url='" + ff + "'>" ).text( fn[0].replace('_','') ).appendTo( "#files" );
+          $( "<div class='file' data-url='" + ff + "'>" ).text( fn[0].replace('_','') ).appendTo( ".folder" );
         }
       });
     });

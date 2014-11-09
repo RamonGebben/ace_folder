@@ -75,7 +75,7 @@ body {
   border-right: 1px solid #444;
 }
 
-.folder {
+.folder h3 {
   margin-top: 10px;
   margin-bottom: 0px;
   padding-right: 10px;
@@ -86,6 +86,15 @@ body {
   line-height: 30px;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.folder {
+  /*height: 3em;*/
+  overflow: hidden;
+}
+
+.folder.open {
+  height: auto;
 }
 
 .file {

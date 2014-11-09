@@ -12,12 +12,15 @@
 }
 
 
-.folder:before {
+.folder h3:before {
   font-family: icon;
-  float: left;
   padding: 0 10px;
-  content: "\f115";
+  content: "\f114";
 }
+/*
+.folder.open h3:before {
+  content: "\f115";
+}*/
 
 .file:before {
   font-family: icon;
