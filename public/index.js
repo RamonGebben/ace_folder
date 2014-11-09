@@ -36,6 +36,9 @@ var update = function(){
     editor.setReadOnly( false );
     session.setMode( "ace/mode/" + ( ace_modes[ currentFile.split('.')[1] ] || "text" ));
     $('#nav').text( currentFile );
+    if($('.loading')) {
+        $('.loading').remove();
+    }
     $('#files .file').removeClass('selected');
     $('#files .file').each( function(i,e){
       if( $(e).data('url') === currentFile ){
