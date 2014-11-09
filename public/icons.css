@@ -31,7 +31,7 @@
 }
 
 .file[data-url*="css"]:before { content: "\f13c"; }
-.file[data-url*="html"]:before { content: "\f13c"; }
+.file[data-url*="html"]:before { content: "\f121"; }
 .file[data-url*="md"]:before { content: "\e601"; }
 .file[data-url*="coffee"]:before { content: "\e600"; }
 .file[data-url*="rb"]:before { content: "\e602"; }
