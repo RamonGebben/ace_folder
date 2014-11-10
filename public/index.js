@@ -7,7 +7,7 @@ var ace_modes = {
   "text/css" : "css",
   "text/x-markdown" : "markdown",
   "text/html" : "html"
-}
+};
 
 // File Pane
 
@@ -52,7 +52,7 @@ App.prototype.redirect = function(){
       }
     });
   }
-}
+};
 
 // collects new structure from server
 App.prototype.refresh = function(){
@@ -62,7 +62,7 @@ App.prototype.refresh = function(){
     self.redraw_files();
     if( !self.currentFile && window.location.hash !== "" ) self.redirect();
   });
-}
+};
 
 App.prototype.new_editor = function( editor_name, fn, mime, txt ){
 
@@ -99,7 +99,7 @@ App.prototype.new_editor = function( editor_name, fn, mime, txt ){
 
   return status;
 
-}
+};
 
 App.prototype.select_editor = function( editor_name ){
 
@@ -116,7 +116,7 @@ App.prototype.select_editor = function( editor_name ){
 
   this.redraw_editor();
 
-}
+};
 
 
 App.prototype.load = function( fn, mime ){
@@ -135,7 +135,7 @@ App.prototype.load = function( fn, mime ){
     this.select_editor( editor_name );
   }
 
-}
+};
 
 
 // saves currentFile to server
@@ -150,7 +150,7 @@ App.prototype.save = function(){
     this.editor.modified = false;
     this.redraw_editor();
   }
-}
+};
 
 // call whenever currentFile changes
 App.prototype.redraw_editor = function(){
@@ -160,7 +160,7 @@ App.prototype.redraw_editor = function(){
   window.location.hash = this.editor.fn;
 
   // update window title
-  document.title = this.editor.fn
+  document.title = this.editor.fn;
 
   // update navigation
   $('#nav').text( this.editor.fn );
@@ -174,7 +174,7 @@ App.prototype.redraw_editor = function(){
     }
   });
 
-}
+};
 
 // call whenever App.files changes
 App.prototype.redraw_files = function(){
@@ -199,7 +199,7 @@ App.prototype.redraw_files = function(){
 
   // adding 'open' behavior
   $("#files .file").click( function( e ){
-    self.load( $(e.target).data('url'), $(e.target).data('mime') )
+    self.load( $(e.target).data('url'), $(e.target).data('mime') );
   });
 
   // remove loading animation
