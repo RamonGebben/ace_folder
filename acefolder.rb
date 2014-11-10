@@ -1,8 +1,15 @@
 require 'sinatra'
 require 'json'
+require 'mimemagic'
+require 'pathname'
 
 # set to whichever folder you want to edit
 set :acefolder, 'demo/'
+
+def collect_mime( fn )
+  return "folder" if File.directory?( fn )
+  return MimeMagic.by_magic( fn ) || MimeMagic.by_path( fn )  || "unknown/" + File.extname( fn )
+end
 
 use Rack::Auth::Basic, "Restricted Area" do |username, password|
   username == 'demo' and password == 'scaffold'
@@ -13,14 +20,18 @@ get '/' do
 end
 
 get '/structure' do
-  Dir.glob( settings.acefolder + "**/*").reject{ |fn| File.directory?(fn) }.collect{ |c| c.gsub( settings.acefolder, "" ) }.to_json
+  files = Dir.glob( settings.acefolder + "**/*").reject{ |fn| File.directory?( fn ) }.group_by{ |fn| File.dirname( fn ) }
+  files.each do |p,ff|
+    files[p] = ff.collect{ |fn| { fn: fn , mime:  collect_mime( fn ) } }
+  end
+  return files.to_json
 end
 
 get '/file/*' do
-  File.read( settings.acefolder + params[:splat].first.gsub("..","") )
+  File.read( params[:splat].first )
 end
 
 put '/file/*' do
-  File.write( settings.acefolder + params[:splat].first.gsub("..",""), request.body.read.to_s )
+  File.write( params[:splat].first, request.body.read.to_s )
   "OK"
 end

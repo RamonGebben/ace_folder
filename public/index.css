@@ -43,14 +43,15 @@ body {
   font-weight: 100;
 }
 
-#editor, #nav, #files {
+.editor, #nav, #files {
   position: fixed;
 }
 
-#editor {
+.editor {
   top: 0px; left: 200px; right: 60px; bottom: 0px;
   font-family: 'Ubuntu Mono', monospace;
   opacity: 0.8;
+  display: none;
 }
 
 #nav {
@@ -98,9 +99,6 @@ body {
   cursor: pointer;
 }
 
-.folder:first-child h3:after {
-  content: "ROOT";
-}
 .folder {
   overflow: hidden;
 }

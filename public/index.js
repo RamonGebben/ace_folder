@@ -1,164 +1,211 @@
+// ACE Modes
 
-// Setting up ACE
-
-var editor = ace.edit( "editor" );
-var session = editor.getSession();
-
-editor.setTheme( "ace/theme/monokai" );
-editor.setFontSize( "16px" );
-editor.setShowPrintMargin( false );
-editor.setReadOnly( true );
-$('#editor').css( "line-height", "24px" );
-
-session.setMode( "ace/mode/markdown" );
-session.setUseWrapMode( true );
-session.setUseSoftTabs( true );
 
 var ace_modes = {
-  "yml" : "yaml",
-  "html" : "liquid",
-  "scss" : "scss",
-  "markdown" : "markdown",
-  "md" : "markdown",
-  "xml" : "liquid",
-  "rb"  : "ruby"
-};
-
-var currentFile;
-var oldFile;
-var modified;
-
-function openFolder() {
-  $('.folder h3').click(function(){
-    $( this ).parent().toggleClass('open');
-  });
+  "application/x-ruby" : "ruby",
+  "application/javascript" : "javascript",
+  "text/css" : "css",
+  "text/x-markdown" : "markdown",
+  "text/html" : "html"
 }
 
-var update = function(){
+// File Pane
 
-  if( oldFile !== currentFile ){
-    editor.setReadOnly( false );
-    session.setMode( "ace/mode/" + ( ace_modes[ currentFile.split('.')[1] ] || "text" ));
-    $('#nav').text( currentFile );
-    if($('.loading')) {
-        $('.loading').remove();
-    }
-    $('#files .file').removeClass('selected');
-    $('#files .file').each( function(i,e){
-      if( $(e).data('url') === currentFile ){
-        $(e).addClass('selected');
-      }
-    });
-  }
-  if( modified ){
-    $('#nav').addClass('modified');
-  } else {
-    $('#nav').removeClass('modified');
-  }
-  oldFile =  currentFile;
-};
+function App(){
 
-var save = function(){
-  if( currentFile ){
-    $.ajax({
-      type: "PUT",
-      contentType: "text/plain",
-      url: "/file/" + currentFile,
-        data: editor.getValue()
-      });
-      modified = false;
-      TogetherJS.send({type: "fileChange", currentFile: currentFile, modified: modified });
-      update();
-    }
-  };
+  // initialize properties
+  this.files = [];
+  this.editors = {};
 
-  var there_was_input;
+  // keybinding save
+  var self = this;
   $(document).bind('keydown', function(e) {
-      there_was_input = true;
-      if( (e.ctrlKey||e.metaKey) && (e.which === 83)) {
+    if( (e.ctrlKey||e.metaKey) && (e.which === 83)) {
       e.preventDefault();
-      save();
+      self.save();
       return false;
     }
   });
 
-  function Structure(){
-    this.files = [];
+  // collect structure
+  this.refresh();
+
+  // detect onhashchange
+  window.onhashchange = this.redirect.bind( this );
+
+}
+
+// loads file based on hash fragment in url
+App.prototype.redirect = function(){
+  var self = this;
+  for( var k in self.files ){
+    self.files[k].forEach( function( file ){
+      if( file.fn === window.location.hash.substr(1) ){
+        self.currentFile = file.fn;
+        self.currentMime = file.mime;
+        $('#files .folder').each( function(i,e){
+          if( $(e).data('url') === k ){
+            $(e).addClass('open');
+          }
+        });
+        self.load( file.fn, file.mime );
+      }
+    });
   }
-  Structure.prototype.refresh = function(){
+}
+
+// collects new structure from server
+App.prototype.refresh = function(){
+  var self = this;
   $.get( "/structure", function( data ) {
-    var files = JSON.parse( data );
-    var rootfiles = [];
-
-    var folders = [];
-    files.forEach( function( f ){
-      ff = f.split('/');
-      ff = ff.slice(0,ff.length-1).join('/');
-      if( folders.indexOf( ff ) === -1 ) folders.push( ff );
-    });
-
-    folders.sort();
-    // Dunno why we need this
-    // $( "<div class='folder'>" ).text( "ROOT" ).appendTo( "#files" );
-
-    folders.forEach( function( fd ){
-      // $( "<div class='folder'>" ).text( fd.replace('_','') ).appendTo( "#files" );
-      // Maybe do this a better cause this breaks
-      $( "<div class='folder'>" ).append( $( "<h3>" + fd.replace('_','') + "</h3>") ).appendTo( "#files" );
-      files.forEach( function( ff ){
-        var fn = ff.split('/');
-        if( fn.slice(0,fn.length-1).join('/') === fd ){
-          fn = fn[fn.length-1].split('.');
-          $( "<div class='file' data-url='" + ff + "'>" ).text( fn[0].replace('_','') ).appendTo( ".folder" );
-        }
-      });
-    });
-
-    $("#files .file").click( function( e ){
-       var url = $(e.target).data('url');
-       save();
-       $.get("/file/" + url, function( data ){
-         currentFile = url;
-         editor.setValue( data, -1 );
-         modified = false;
-         update();
-         TogetherJS.send({type: "fileChange", currentFile: currentFile, modified: modified });
-       });
-    });
-
+    self.files = JSON.parse( data );
+    self.redraw_files();
+    if( !self.currentFile && window.location.hash !== "" ) self.redirect();
   });
-  
-  }
+}
 
+App.prototype.new_editor = function( editor_name, fn, mime, txt ){
 
-  function structure(){
+  $("<div class='editor' id='" + editor_name + "'>").appendTo('body');
 
-  }
+  // configure ace editor
+  var ace_editor = ace.edit( editor_name );
+  ace_editor.setTheme( "ace/theme/monokai" );
+  ace_editor.setFontSize( "16px" );
+  ace_editor.setShowPrintMargin( false );
+  ace_editor.setReadOnly( false );
+  var session = ace_editor.getSession();
+  session.setMode( "ace/mode/" + ace_modes[ this.currentMime ]  );
+  session.setUseWrapMode( true );
+  session.setUseSoftTabs( true );
+  $( "#" + editor_name ).css( "line-height", "24px" );
 
+  // set the current value
+  ace_editor.setValue( txt, -1 );
 
+  var status = { ace: ace_editor, modified: false, fn: fn, mime: mime, txt: txt };
 
-  TogetherJS.hub.on("fileChange", function (msg) {
-    currentFile = msg.currentFile;
-    modified = msg.modified;
-    update();
-  });
-
-  TogetherJS.hub.on("hello", function (msg) {
-    TogetherJS.send({type: "fileChange", currentFile: currentFile, modified: modified });
-  });
-
-  TogetherJS.on("ready", function(){
-    setTimeout( function(){
-       TogetherJS.send({type: "hello"});
-    }, 500);
-  });
-
-
-  editor.on('change', function(){
-    if( there_was_input ){
-       TogetherJS.send({type: "fileChange", currentFile: currentFile, modified: modified });
-       modified = true;
+  // detect dirty
+  var self = this;
+  ace_editor.on('change', function(){
+    if( !status.modified ){
+      status.modified = true;
+      self.redraw_editor();
     }
-    there_was_input = false;
-    update();
   });
+  // make sure TogetherJS picks it up
+
+  TogetherJS.reinitialize();
+
+  return status;
+
+}
+
+App.prototype.select_editor = function( editor_name ){
+
+  // hide current editor
+  $('.editor').hide();
+
+  // store the choice
+  this.editor = this.editors[ editor_name ];
+  console.log( this.editor );
+
+  // show current editor
+  $( '#' + editor_name ).fadeIn( 50 );
+  this.editor.ace.focus();
+
+  this.redraw_editor();
+
+}
+
+
+App.prototype.load = function( fn, mime ){
+
+  // inject a new editor
+  var editor_name = "editor_" + fn.split('/').join('-slash-').split('.').join('-dot-');
+
+  // if we don't have this editor yet, fetch data and create it
+  if( !this.editors [ editor_name ] ){
+    var self = this;
+    $.get("/file/" + fn, function( txt ){
+      self.editors[ editor_name ] = self.new_editor( editor_name, fn, mime, txt );
+      self.select_editor( editor_name );
+    });
+  } else {
+    this.select_editor( editor_name );
+  }
+
+}
+
+
+// saves currentFile to server
+App.prototype.save = function(){
+  if( this.editor ){
+    $.ajax({
+      type: "PUT",
+      contentType: "text/plain",
+      url: "/file/" + this.editor.fn,
+      data: this.editor.ace.getValue()
+    });
+    this.editor.modified = false;
+    this.redraw_editor();
+  }
+}
+
+// call whenever currentFile changes
+App.prototype.redraw_editor = function(){
+  var self = this;
+
+  // update url
+  window.location.hash = this.editor.fn;
+
+  // update window title
+  document.title = this.editor.fn
+
+  // update navigation
+  $('#nav').text( this.editor.fn );
+  if( this.editor.modified ) $('#nav').addClass('modified'); else $('#nav').removeClass('modified');
+
+  // update file pane
+  $('#files .file').removeClass('selected');
+  $('#files .file').each( function(i,e){
+    if( $(e).data('url') === self.editor.fn ){
+      $(e).addClass('selected');
+    }
+  });
+
+}
+
+// call whenever App.files changes
+App.prototype.redraw_files = function(){
+  var self = this;
+
+  // reset it all
+  $('#files').html('');
+
+  // adding folders and files
+  Object.keys( this.files ).sort().forEach( function( pathname ){
+    var folder = $( "<div class='folder' data-url='" + pathname + "'><h3>" + pathname + "</h3></div>").appendTo( "#files" );
+    self.files[ pathname ].forEach( function( file ){
+      var name = file.fn.substr( pathname.length + 1 );
+      $( folder ).append( $( "<div class='file' data-url='" + file.fn + "' data-mime='" + file.mime + "'>" ).text( name ) );
+    });
+  });
+
+  // adding toggle behavior
+  $('.folder h3').click(function(){
+    $( this ).parent().toggleClass('open');
+  });
+
+  // adding 'open' behavior
+  $("#files .file").click( function( e ){
+    self.load( $(e.target).data('url'), $(e.target).data('mime') )
+  });
+
+  // remove loading animation
+  if( $('.loading') )  $('.loading').remove();
+
+
+};
+
+window.app = new App();
