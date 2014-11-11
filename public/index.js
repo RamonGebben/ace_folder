@@ -3,9 +3,10 @@
 
 var ace_modes = {
   "application/x-ruby" : "ruby",
-  "application/javascript" : "javascript",
-  "text/css" : "css",
   "text/x-markdown" : "markdown",
+  "application/javascript" : "javascript",
+  "unknown/.coffee": "coffee",
+  "text/css" : "css",
   "text/html" : "html"
 };
 
@@ -70,7 +71,7 @@ App.prototype.new_editor = function( editor_name, fn, mime, txt ){
 
   // configure ace editor
   var ace_editor = ace.edit( editor_name );
-  ace_editor.setTheme( "ace/theme/monokai" );
+  ace_editor.setTheme( "ace/theme/merbivore" );
   ace_editor.setFontSize( "16px" );
   ace_editor.setShowPrintMargin( false );
   ace_editor.setReadOnly( false );
