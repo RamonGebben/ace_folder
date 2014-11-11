@@ -219,6 +219,8 @@ body {
   color: lime;
   font-weight: bold;
   opacity: 1;
+  height: auto;
+  padding: 1px 3px 3px 10px;
 }
 
 #files .file.modified {
