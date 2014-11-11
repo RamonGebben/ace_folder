@@ -3,12 +3,12 @@
 
 var ace_modes = {
   "application/x-ruby" : "ruby",
-  "application/javascript" : "javascript",
-  "text/css" : "css",
   "text/x-markdown" : "markdown",
-  "text/html" : "html",
-  "unknown/.coffee" : "coffee"
-}
+  "application/javascript" : "javascript",
+  "unknown/.coffee": "coffee",
+  "text/css" : "css",
+  "text/html" : "html"
+};
 
 var ace_styles = {
   "application/x-ruby" : "chaos",
@@ -17,7 +17,7 @@ var ace_styles = {
   "text/x-markdown" : "chaos",
   "text/html" : "chaos",
   "unknown/.coffee" : "chaos"
-}
+};
 
 
 // File Pane
@@ -46,8 +46,8 @@ function App(){
 
   // install click handler on nav
   $('#nav').click( function(){
-    window.open( '/file/' + self.editor.fn,'_new')
-  })
+    window.open( '/file/' + self.editor.fn,'_new');
+  });
 
 
 
@@ -68,7 +68,7 @@ App.prototype.redirect = function(){
       }
     });
   }
-}
+};
 
 // collects new structure from server
 App.prototype.refresh = function(){
@@ -78,7 +78,7 @@ App.prototype.refresh = function(){
     self.redraw_files();
     if( !self.currentFile && window.location.hash !== "" ) self.redirect();
   });
-}
+};
 
 App.prototype.new_editor = function( editor_name, fn, mime, txt ){
 
@@ -112,12 +112,12 @@ App.prototype.new_editor = function( editor_name, fn, mime, txt ){
 
   return status;
 
-}
+};
 
 App.prototype.select_editor = function( editor_name ){
 
   // hide current editor
-  $('.editor').removeClass("active")
+  $('.editor').removeClass("active");
 
   // store the choice
   this.editor = this.editors[ editor_name ];
@@ -128,7 +128,7 @@ App.prototype.select_editor = function( editor_name ){
 
   this.redraw_editor();
 
-}
+};
 
 
 App.prototype.load = function( fn, mime ){
@@ -147,7 +147,7 @@ App.prototype.load = function( fn, mime ){
     this.select_editor( editor_name );
   }
 
-}
+};
 
 
 // saves currentFile to server
@@ -170,7 +170,7 @@ App.prototype.save = function(){
     }
   });
   this.redraw_editor();
-}
+};
 
 // call whenever currentFile changes
 App.prototype.redraw_editor = function(){
@@ -231,7 +231,7 @@ App.prototype.redraw_files = function(){
 
   // adding 'open' behavior
   $("#files .file").click( function( e ){
-    self.load( $(e.target).data('url'), $(e.target).data('mime') )
+    self.load( $(e.target).data('url'), $(e.target).data('mime') );
   });
 
   // remove loading animation
