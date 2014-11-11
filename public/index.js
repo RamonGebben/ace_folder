@@ -73,7 +73,7 @@ App.prototype.redirect = function(){
 // collects new structure from server
 App.prototype.refresh = function(){
   var self = this;
-  $.get( "/structure", function( data ) {
+  $.get( "structure", function( data ) {
     self.files = JSON.parse( data );
     self.redraw_files();
     if( !self.currentFile && window.location.hash !== "" ) self.redirect();
@@ -152,17 +152,23 @@ App.prototype.load = function( fn, mime ){
 
 // saves currentFile to server
 App.prototype.save = function(){
-  for( var k in this.editors ){
-    if( this.editors[k].modified ){
+  var self = this;
+  Object.keys( this.editors ).forEach( function(k){
+    if( self.editors[k].modified ){
       $.ajax({
         type: "PUT",
         contentType: "text/plain",
-        url: "/file/" + this.editors[k].fn,
-        data: this.editors[k].ace.getValue()
+        url: "/file/" + self.editors[k].fn,
+        data: self.editors[k].ace.getValue(),
+        success: function(){
+          if( window.location.pathname === "/meta/" && self.editors[k].fn.substr(0,14) === "public/themes/" ){
+            $('#theme').attr('href', self.editors[k].fn.substr(6) + "?" + Date.now() );                        
+          }
+        }
       });
-      this.editors[k].modified = false;
+      self.editors[k].modified = false;
     }
-  }
+  });
   this.redraw_editor();
 }
 
