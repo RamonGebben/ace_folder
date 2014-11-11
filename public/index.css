@@ -48,32 +48,65 @@ body {
 }
 
 .editor {
-  top: 0px; left: 200px; right: 60px; bottom: 0px;
+  top: 0px; left: 280px; bottom: 30px; right: 0px;
   font-family: 'Ubuntu Mono', monospace;
-  opacity: 0.8;
   display: none;
 }
 
+.editor.active {
+  display: block;
+  transform: none;
+  opacity: 0.8;
+  transition: all 0.3s ease-in;
+}
+
+.editor.modified {
+  opacity: 1;
+}
+
 #nav {
-  bottom: 0px; left: 200px; height: 20px; width: 100%;
+  bottom: 0px; left: 280px; right: 0px;
   display: block;
   font-size: 15px; line-height: 20px;
-  color: #ddd;
+  color: lime;
   background-color: rgba(49, 49, 49, 0.21);
-  padding: 0px 10px 0px 10px;
-  border: 0px none;
+  padding: 5px 10px 5px 10px;
+  border-top: 1px solid #333;
   margin: 0;
   font-family: 'Source Sans Pro', sans-serif, Helvetica;
-  font-weight: 100;
+  font-weight: bold;
+  transition: all 0.5s ease-in;
+  cursor: pointer;
+  text-shadow: 0px 0px 10px #999;
+}
+
+#nav:hover {
+  text-decoration: underline;
 }
 
 #nav.modified {
   background-color: rgba(176, 51, 78, 0.21);
+  transition: all 0.5s ease-out;
+  color: orange;
 }
 
+#nav em, #nav strong {
+  display: inline-block; float: right;
+  font-weight: bold;
+  width: 100px;
+  text-align: right;
+}
+
+#nav strong {
+  color: #ffc;
+  font-weight: normal;
+  font-size: 12px;
+}
+
+
 #files {
-  top: -10px; left: 0px; bottom: 0px;
-  width: 200px;
+  top: 0px; left: 0px; bottom: 0px;
+  width: 280px;
   font-size: 14px;
   overflow: auto;
   text-align: left;
@@ -81,56 +114,134 @@ body {
   border-right: 1px solid #444;
   -webkit-user-select: none;
   -moz-user-select: none;
-  padding: 20px 0;
+  padding: 0px 0;
+  box-sizing: border-box;
+  left: -280px;
+  opacity: 0;
+  transition: all 0.5s ease-out;
+}
 
+#files.loaded {
+  left: 0px;
+  opacity: 1;
+  transition: all 0.5s ease-out;
+}
+
+.folder {
+  border-bottom: 1px solid #333;
+}
+
+.folder.open {
+  background: linear-gradient(to bottom, #222 0%, #000 100%);
 }
 
 .folder h3 {
+  box-sizing: border-box;
+  text-shadow: 0px 0px 1px #999;
   margin-top: 0px;
   margin-bottom: 0px;
-  padding-right: 10px;
-  color: #f9f9f9;
+  padding-right: 5px;
+  padding-left: 10px;
+  color: #999;
+  padding-top: 2px;
+  line-height: 24px;
   overflow: hidden;
-  font-weight: 900;
-  font-size: 16px;
-  line-height: 30px;
+  font-weight: normal;
+  font-size: 14px;
   white-space: nowrap;
   text-overflow: ellipsis;
   cursor: pointer;
+  background: linear-gradient(to bottom, #222 0%, #333 100%);
+}
+.folder.open h3 {
+  color: #f9f9f9;
+  font-weight: 900;
+  background: none;
+  background-color: transparent;
+}
+
+.folder h3 em {
+  display: inline-block;
+  float: right;
+  color: #666;
+  font-size: 12px;
+  padding: 2px 5px 2px 5px;
+  line-height: 16px;
+  font-weight: normal;
+  text-shadow: 0px 0px 10px #000;
+  background-color: rgba( 0, 0, 0, 0.2 );
+  border-radius: 10px;
+  text-align: center;
+  margin-top: 2px;
+  min-width: 2em;
+}
+.folder.open h3 em {
+  display: none;
 }
 
 .folder {
   overflow: hidden;
 }
 
+
 .folder.open .file {
-  display: block;
+  transition: all 0.25s ease-out;
+  height: auto;
+  opacity: 0.5;
+  padding: 1px 3px 3px 10px;
 }
 
 .file {
-  padding: 5px 10px;
+  transition: all 0.25s ease-out;
   white-space: nowrap;
   overflow: hidden;
-  color: #ccc;
+  color: #eee;
   text-overflow: ellipsis;
-  display: none;
-  text-shadow: 1px 2px 4px #111, 0 0 0 #000, 1px 2px 4px #111;
+  height: 0;
+  opacity: 0;
+  line-height: 20px;
+  font-weight: bold;
+  /*text-shadow: 1px 2px 2px #111, 0 0 0 #000, 1px 2px 4px #111;*/
+
 }
 
-.file:hover, .folder h3:hover {
-  background: rgba(255, 255, 255, 0.2);
+.folder .file:hover, .folder h3:hover {
+  /*background: rgba(255, 255, 255, 0.2);*/
+  color: cyan;
   cursor: pointer;
   text-decoration: none;
+  font-weight: bold;
+  opacity: 1;
 }
 
-.file.selected {
-  background: rgba(255, 255, 255, 0.5);
+#files .file.selected {
+  /*background: rgba(255, 255, 255, 0.5);*/
+  color: lime;
+  font-weight: bold;
+  opacity: 1;
 }
+
+#files .file.modified {
+  color: orange;
+  height: auto;
+  opacity: 0.5;
+  padding: 1px 3px 3px 10px;
+  background: transparent;
+}
+
+#files .file.selected.modified {
+  opacity: 1;
+}
+
+
+#files.modified .file.selected {
+  color: orange;
+}
+
 
 /* box shadows */
 
 #nav { z-index: 100; box-shadow: 0px -2px 8px rgba(39, 40, 36, 0.55); }
-#togetherjs-dock { z-index: 150; border-left: 1px solid #444444; }
 #files { z-index: 150; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); }
 
 
@@ -196,38 +307,6 @@ body {
   -webkit-animation: spin 1.5s infinite;
   animation: spin 1.5s infinite;
 }
-
-
-/* togetherjs hacks */
-
-#togetherjs-share-button, #togetherjs-menu-end, #togetherjs-dock-anchor {
-   display: none;
-}
-
-#togetherjs-dock.togetherjs-dock-right {
-  right: 0px;
-  height: 100%;
-  border-radius: 0px;
-  background: #222222;
-}
-
-#togetherjs-dock {
-  position: fixed;
-  top: -1px;
-  right: -10px;
-  bottom: 0px;
-}
-
-.togetherjs header,
-.togetherjs-subtitle,
-.togetherjs-close,
-#togetherjs-chat-button.togetherjs-active,
-.togetherjs-button:hover {
-  background-color: #5B5B5B !important;
-  border-color: #444444 !important;
-}
-
-.togetherjs-chat {}
 
 
 /* ACE Hacks */

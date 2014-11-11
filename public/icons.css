@@ -12,7 +12,7 @@
 }
 
 
-.folder h3:before {
+/*.folder h3:before {
   font-family: icon;
   padding: 0 10px;
   content: "\f114";
@@ -21,21 +21,29 @@
 .folder.open h3:before {
   content: "\f115";
 }
-
+*/
 .file:before {
   font-family: icon;
   float: left;
-  padding: 0 10px;
+  padding: 0px 4px 0px 2px;
   content: "\f036";
-  line-height: 1.4;
+  font-size: 14px;
+  opacity: 0.7;
+  font-weight: normal;  
+  display: inline-block;
 }
 
-.file[data-url*="css"]:before {  color: #29A8DE; content: "\f13c"; }
-.file[data-url*="html"]:before { color: #F26621; content: "\f121"; }
-.file[data-url*="md"]:before { color: #755838; content: "\e601"; }
-.file[data-url*="coffee"]:before { color: #A6814F; content: "\e600"; }
-.file[data-url*="rb"]:before { color: #B42839; content: "\e602"; }
-.file[data-url*="png"]:before, .file[data-url*=".jpg"]:before { color: #35BAA0; content: "\f03e"; }
+.file.selected:before {
+  opacity: 1;
+}
+
+
+.file[data-mime*="css"]:before {  color: #29A8DE; content: "\f13c"; }
+.file[data-mime*="html"]:before { color: #F26621; content: "\f121"; }
+.file[data-mime*="md"]:before { color: #755838; content: "\e601"; }
+.file[data-mime*="coffee"]:before { color: #A6814F; content: "\e600"; }
+.file[data-mime*="rb"]:before { color: #B42839; content: "\e602"; }
+.file[data-mime*="png"]:before, .file[data-url*=".jpg"]:before { color: #35BAA0; content: "\f03e"; }
 
 .file[data-url*="js"]:before {
   content: "JS";
