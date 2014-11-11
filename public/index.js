@@ -117,13 +117,13 @@ App.prototype.new_editor = function( editor_name, fn, mime, txt ){
 App.prototype.select_editor = function( editor_name ){
 
   // hide current editor
-  $('.editor').hide();
+  $('.editor').removeClass("active")
 
   // store the choice
   this.editor = this.editors[ editor_name ];
 
   // show current editor
-  $( '#' + editor_name ).fadeIn( 50 );
+  $( '#' + editor_name ).addClass("active");
   this.editor.ace.focus();
 
   this.redraw_editor();
@@ -152,16 +152,18 @@ App.prototype.load = function( fn, mime ){
 
 // saves currentFile to server
 App.prototype.save = function(){
-  if( this.editor ){
-    $.ajax({
-      type: "PUT",
-      contentType: "text/plain",
-      url: "/file/" + this.editor.fn,
-      data: this.editor.ace.getValue()
-    });
-    this.editor.modified = false;
-    this.redraw_editor();
+  for( var k in this.editors ){
+    if( this.editors[k].modified ){
+      $.ajax({
+        type: "PUT",
+        contentType: "text/plain",
+        url: "/file/" + this.editors[k].fn,
+        data: this.editors[k].ace.getValue()
+      });
+      this.editors[k].modified = false;
+    }
   }
+  this.redraw_editor();
 }
 
 // call whenever currentFile changes
@@ -175,16 +177,28 @@ App.prototype.redraw_editor = function(){
   document.title = this.editor.fn
 
   // update navigation
-  $('#nav').text( this.editor.fn ).append( this.editor.modified ? "<em>modified</em>" : "" );
+  $('#nav').text( this.editor.fn ).append( this.editor.modified ? "<em>modified</em>" : "<em>original<em>" ).append( "<strong>" + this.editor.mime + "</strong>" );
   if( this.editor.modified ) $('#nav').addClass('modified'); else $('#nav').removeClass('modified');
+  if( this.editor.modified ) $('#files').addClass('modified'); else $('#files').removeClass('modified');
 
   // update file pane
   $('#files .file').removeClass('selected');
+  $('#files .file').removeClass('modified');
   $('#files .file').each( function(i,e){
-    if( $(e).data('url') === self.editor.fn ){
+    var url = $(e).data('url');
+    if( url === self.editor.fn ){
       $(e).addClass('selected');
     }
+    for( var k in self.editors ){
+      var editor = self.editors[k];
+      if( url === editor.fn && editor.modified ){
+        $(e).addClass('modified');
+      }
+    }
+
   });
+
+
 
 }
 
@@ -216,6 +230,7 @@ App.prototype.redraw_files = function(){
 
   // remove loading animation
   if( $('.loading') )  $('.loading').remove();
+  $('#files').addClass('loaded');
 
 
 };

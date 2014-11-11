@@ -48,42 +48,61 @@ body {
 }
 
 .editor {
-  top: 0px; left: 250px; right: 0px; bottom: 0px;
+  top: 0px; left: 280px; bottom: 30px; right: 0px;
   font-family: 'Ubuntu Mono', monospace;
+  display: none;  
+}
+
+.editor.active {
+  display: block;
+  transform: none;
   opacity: 0.8;
-  display: none;
+  transition: all 0.3s ease-in;
 }
 
 #nav {
-  bottom: 0px; left: 250px; right: 0px;
+  bottom: 0px; left: 280px; right: 0px;
   display: block;
   font-size: 15px; line-height: 20px;
-  color: #ddd;
+  color: lime;
   background-color: rgba(49, 49, 49, 0.21);
   padding: 5px 10px 5px 10px;
   border-top: 1px solid #333;
   margin: 0;
   font-family: 'Source Sans Pro', sans-serif, Helvetica;
-  font-weight: 100;
+  font-weight: bold;
   transition: all 0.5s ease-in;
   cursor: pointer;
+  text-shadow: 0px 0px 10px #999;
+}
+
+#nav:hover {
+  text-decoration: underline;
 }
 
 #nav.modified {
   background-color: rgba(176, 51, 78, 0.21);
   transition: all 0.5s ease-out;
+  color: orange;
 }
 
-#nav em {
+#nav em, #nav strong {
   display: inline-block; float: right;
   font-weight: bold;
+  width: 100px;
+  text-align: right;
 }
 
+#nav strong {
+  color: #ffc;
+  font-weight: normal;
+  font-size: 12px;
+}
 
 
 #files {
   top: 0px; left: 0px; bottom: 0px;
-  width: 250px;
+  width: 280px;
   font-size: 14px;
   overflow: auto;
   text-align: left;
@@ -93,29 +112,48 @@ body {
   -moz-user-select: none;
   padding: 0px 0;
   box-sizing: border-box;
+  left: -280px;
+  opacity: 0;
+  transition: all 0.5s ease-out;
+}
 
+#files.loaded {
+  left: 0px;
+  opacity: 1;
+  transition: all 0.5s ease-out;
+}
+
+.folder {
+  border-bottom: 1px solid #333;
+}
+
+.folder.open {
+  background: linear-gradient(to bottom, #222 0%, #000 100%);
 }
 
 .folder h3 {
   box-sizing: border-box;
+  text-shadow: 0px 0px 1px #999;
   margin-top: 0px;
   margin-bottom: 0px;
-  padding-right: 10px;
+  padding-right: 5px;
   padding-left: 10px;
   color: #999;
-  line-height: 25px;
+  padding-top: 2px;
+  line-height: 24px;
   overflow: hidden;
   font-weight: normal;
   font-size: 14px;
   white-space: nowrap;
   text-overflow: ellipsis;
   cursor: pointer;
-  border-top: 1px solid #333333;
+  background: linear-gradient(to bottom, #222 0%, #333 100%);
 }
 .folder.open h3 {
   color: #f9f9f9;
   font-weight: 900;
-  background-color: #444;
+  background: none;
+  background-color: transparent;
 }
 
 .folder h3 em {
@@ -123,7 +161,14 @@ body {
   float: right;
   color: #666;
   font-size: 12px;
+  padding: 2px 5px 2px 5px;
+  line-height: 16px;
   font-weight: normal;
+  text-shadow: 0px 0px 10px #000;
+  background-color: rgba( 0, 0, 0, 0.2 );
+  border-radius: 10px;
+  text-align: center;
+  margin-top: 2px;
 }
 .folder.open h3 em {
   display: none;
@@ -133,23 +178,33 @@ body {
   overflow: hidden;
 }
 
+
+.file.modified {
+  color: orange;
+  height: auto;
+  opacity: 0.5;
+  padding: 1px 3px 3px 10px;
+  background: transparent;
+}
+
 .folder.open .file {
   transition: all 0.25s ease-out;
   height: auto;
-  opacity: 1;
-  padding: 3px 3px;
+  opacity: 0.5;
+  padding: 1px 3px 3px 10px;
 }
 
 .file {
+  transition: all 0.25s ease-out;
   white-space: nowrap;
   overflow: hidden;
-  color: #ccc;
+  color: #eee;
   text-overflow: ellipsis;
   height: 0;
   opacity: 0;
   line-height: 20px;
-  text-shadow: 1px 2px 2px #111, 0 0 0 #000, 1px 2px 4px #111;
-  background-color: black;
+  font-weight: bold;
+  /*text-shadow: 1px 2px 2px #111, 0 0 0 #000, 1px 2px 4px #111;*/
 
 }
 
@@ -158,13 +213,20 @@ body {
   color: cyan;
   cursor: pointer;
   text-decoration: none;
+  opacity: 1;
 }
 
-.file.selected {
+#files .file.selected {
   /*background: rgba(255, 255, 255, 0.5);*/
   color: lime;
   font-weight: bold;
+  opacity: 1;
 }
+
+#files.modified .file.selected {
+  color: orange;
+}
+
 
 /* box shadows */
 
