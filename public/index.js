@@ -179,7 +179,7 @@ App.prototype.redraw_editor = function(){
   // update navigation
   $('#nav').text( this.editor.fn ).append( this.editor.modified ? "<em>modified</em>" : "<em>original<em>" ).append( "<strong>" + this.editor.mime + "</strong>" );
   if( this.editor.modified ) $('#nav').addClass('modified'); else $('#nav').removeClass('modified');
-  if( this.editor.modified ) $('#files').addClass('modified'); else $('#files').removeClass('modified');
+  if( this.editor.modified ) $('.editor.active').addClass('modified'); else $('.editor.active').removeClass('modified');
 
   // update file pane
   $('#files .file').removeClass('selected');

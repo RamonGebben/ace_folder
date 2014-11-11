@@ -50,7 +50,7 @@ body {
 .editor {
   top: 0px; left: 280px; bottom: 30px; right: 0px;
   font-family: 'Ubuntu Mono', monospace;
-  display: none;  
+  display: none;
 }
 
 .editor.active {
@@ -58,6 +58,10 @@ body {
   transform: none;
   opacity: 0.8;
   transition: all 0.3s ease-in;
+}
+
+.editor.modified {
+  opacity: 1;
 }
 
 #nav {
@@ -169,6 +173,7 @@ body {
   border-radius: 10px;
   text-align: center;
   margin-top: 2px;
+  min-width: 2em;
 }
 .folder.open h3 em {
   display: none;
@@ -178,14 +183,6 @@ body {
   overflow: hidden;
 }
 
-
-.file.modified {
-  color: orange;
-  height: auto;
-  opacity: 0.5;
-  padding: 1px 3px 3px 10px;
-  background: transparent;
-}
 
 .folder.open .file {
   transition: all 0.25s ease-out;
@@ -208,11 +205,12 @@ body {
 
 }
 
-.file:hover, .folder h3:hover {
+.folder .file:hover, .folder h3:hover {
   /*background: rgba(255, 255, 255, 0.2);*/
   color: cyan;
   cursor: pointer;
   text-decoration: none;
+  font-weight: bold;
   opacity: 1;
 }
 
@@ -222,6 +220,19 @@ body {
   font-weight: bold;
   opacity: 1;
 }
+
+#files .file.modified {
+  color: orange;
+  height: auto;
+  opacity: 0.5;
+  padding: 1px 3px 3px 10px;
+  background: transparent;
+}
+
+#files .file.selected.modified {
+  opacity: 1;
+}
+
 
 #files.modified .file.selected {
   color: orange;
