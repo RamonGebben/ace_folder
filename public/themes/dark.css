@@ -2,19 +2,18 @@
     
 @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro);
 @import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono);
-
 @import url('/icons.css');
   
 /* css reset */
 *, *:before, *:after {
-  box-sizing: border-box;
+  box-sizing: border-box; 
   -webkit-box-sizing: border-box;
-}
+} 
 
 html, body {
   margin: 0;
   padding: 0;
-  background: url("/bg.png");
+  background: url("/bg.png"); 
 }
 
 /* scroll bars in chrome */

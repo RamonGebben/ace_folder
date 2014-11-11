@@ -1,0 +1,46 @@
+/* Fonts */
+
+@import url(http://fonts.googleapis.com/css?family=Ubuntu+Condensed);
+@import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono);
+/*@import url('/icons.css');*/
+
+/* css reset */
+
+*, *:before, *:after { box-sizing: border-box; -webkit-box-sizing: border-box; }
+html, body {  margin: 0; padding: 0; font-family: 'Ubuntu Condensed', sans; font-size: 16px; }
+ 
+/* scroll bars in chrome */
+ 
+::-webkit-scrollbar { height: 2px; width: 2px; background: #000; }
+::-webkit-scrollbar-thumb { background: white; -webkit-border-radius: 0; }
+::-webkit-scrollbar-corner { background: #000; }
+
+/* layout */
+
+#files, .editor, #nav { position: fixed; }
+.editor { top: 0px; left: 0px; right: 250px; bottom: 0px;  }
+#nav { top: 0px; left: 0px; right: 250px; }
+#files { right: 0px; width: 250px; bottom: 0px; top: 0px; }
+
+/* navbar */
+
+#nav { display: none; }
+
+/* file pane */
+ 
+#files { background-color: #333; }
+.file { padding-left: 15px; color: #999; line-height: 26px; cursor: pointer; height: 0px; overflow: hidden; }
+.file.selected { height: auto; color: lime; background-color: #444; }
+.file.modified { height: auto; color: orange; }
+.folder.open .file { height: auto; }
+
+.folder { padding-bottom: 7px; border-top: 1px solid #444; }
+.folder h3 { padding-left: 15px; color: white; cursor: pointer; margin: 0px; padding-bottom: 6px; padding-top: 13px; }
+.folder h3 em { display: none; }
+.file:hover, .folder h3:hover { color: cyan; }
+
+/* editor */
+
+.editor { display: none; }
+.editor.active { display: block; }
+.editor.modified {  background-color: #222;  }
