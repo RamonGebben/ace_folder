@@ -6,8 +6,19 @@ var ace_modes = {
   "application/javascript" : "javascript",
   "text/css" : "css",
   "text/x-markdown" : "markdown",
-  "text/html" : "html"
-};
+  "text/html" : "html",
+  "unknown/.coffee" : "coffee"
+}
+
+var ace_styles = {
+  "application/x-ruby" : "chaos",
+  "application/javascript" : "chaos",
+  "text/css" : "chaos",
+  "text/x-markdown" : "chaos",
+  "text/html" : "chaos",
+  "unknown/.coffee" : "chaos"
+}
+
 
 // File Pane
 
@@ -33,6 +44,13 @@ function App(){
   // detect onhashchange
   window.onhashchange = this.redirect.bind( this );
 
+  // install click handler on nav
+  $('#nav').click( function(){
+    window.open( '/file/' + self.editor.fn,'_new')
+  })
+
+
+
 }
 
 // loads file based on hash fragment in url
@@ -41,8 +59,6 @@ App.prototype.redirect = function(){
   for( var k in self.files ){
     self.files[k].forEach( function( file ){
       if( file.fn === window.location.hash.substr(1) ){
-        self.currentFile = file.fn;
-        self.currentMime = file.mime;
         $('#files .folder').each( function(i,e){
           if( $(e).data('url') === k ){
             $(e).addClass('open');
@@ -52,7 +68,7 @@ App.prototype.redirect = function(){
       }
     });
   }
-};
+}
 
 // collects new structure from server
 App.prototype.refresh = function(){
@@ -62,7 +78,7 @@ App.prototype.refresh = function(){
     self.redraw_files();
     if( !self.currentFile && window.location.hash !== "" ) self.redirect();
   });
-};
+}
 
 App.prototype.new_editor = function( editor_name, fn, mime, txt ){
 
@@ -70,15 +86,15 @@ App.prototype.new_editor = function( editor_name, fn, mime, txt ){
 
   // configure ace editor
   var ace_editor = ace.edit( editor_name );
-  ace_editor.setTheme( "ace/theme/monokai" );
+  ace_editor.setTheme( "ace/theme/" + ace_styles[mime] );
   ace_editor.setFontSize( "16px" );
   ace_editor.setShowPrintMargin( false );
   ace_editor.setReadOnly( false );
   var session = ace_editor.getSession();
-  session.setMode( "ace/mode/" + ace_modes[ this.currentMime ]  );
+  session.setMode( "ace/mode/" + ace_modes[ mime ]  );
   session.setUseWrapMode( true );
   session.setUseSoftTabs( true );
-  $( "#" + editor_name ).css( "line-height", "24px" );
+  $( "#" + editor_name ).css( "line-height", "26px" );
 
   // set the current value
   ace_editor.setValue( txt, -1 );
@@ -93,13 +109,10 @@ App.prototype.new_editor = function( editor_name, fn, mime, txt ){
       self.redraw_editor();
     }
   });
-  // make sure TogetherJS picks it up
-
-  TogetherJS.reinitialize();
 
   return status;
 
-};
+}
 
 App.prototype.select_editor = function( editor_name ){
 
@@ -108,7 +121,6 @@ App.prototype.select_editor = function( editor_name ){
 
   // store the choice
   this.editor = this.editors[ editor_name ];
-  console.log( this.editor );
 
   // show current editor
   $( '#' + editor_name ).fadeIn( 50 );
@@ -116,7 +128,7 @@ App.prototype.select_editor = function( editor_name ){
 
   this.redraw_editor();
 
-};
+}
 
 
 App.prototype.load = function( fn, mime ){
@@ -135,7 +147,7 @@ App.prototype.load = function( fn, mime ){
     this.select_editor( editor_name );
   }
 
-};
+}
 
 
 // saves currentFile to server
@@ -150,7 +162,7 @@ App.prototype.save = function(){
     this.editor.modified = false;
     this.redraw_editor();
   }
-};
+}
 
 // call whenever currentFile changes
 App.prototype.redraw_editor = function(){
@@ -160,10 +172,10 @@ App.prototype.redraw_editor = function(){
   window.location.hash = this.editor.fn;
 
   // update window title
-  document.title = this.editor.fn;
+  document.title = this.editor.fn
 
   // update navigation
-  $('#nav').text( this.editor.fn );
+  $('#nav').text( this.editor.fn ).append( this.editor.modified ? "<em>modified</em>" : "" );
   if( this.editor.modified ) $('#nav').addClass('modified'); else $('#nav').removeClass('modified');
 
   // update file pane
@@ -174,7 +186,7 @@ App.prototype.redraw_editor = function(){
     }
   });
 
-};
+}
 
 // call whenever App.files changes
 App.prototype.redraw_files = function(){
@@ -185,7 +197,7 @@ App.prototype.redraw_files = function(){
 
   // adding folders and files
   Object.keys( this.files ).sort().forEach( function( pathname ){
-    var folder = $( "<div class='folder' data-url='" + pathname + "'><h3>" + pathname + "</h3></div>").appendTo( "#files" );
+    var folder = $( "<div class='folder' data-url='" + pathname + "'><h3>" + pathname + "<em>" + self.files[ pathname ].length + "</em></h3></div>").appendTo( "#files" );
     self.files[ pathname ].forEach( function( file ){
       var name = file.fn.substr( pathname.length + 1 );
       $( folder ).append( $( "<div class='file' data-url='" + file.fn + "' data-mime='" + file.mime + "'>" ).text( name ) );
@@ -199,7 +211,7 @@ App.prototype.redraw_files = function(){
 
   // adding 'open' behavior
   $("#files .file").click( function( e ){
-    self.load( $(e.target).data('url'), $(e.target).data('mime') );
+    self.load( $(e.target).data('url'), $(e.target).data('mime') )
   });
 
   // remove loading animation
