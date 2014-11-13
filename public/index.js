@@ -1,32 +1,9 @@
-// ACE Modes
-
-
-var ace_modes = {
-  "application/x-ruby" : "ruby",
-  "text/x-markdown" : "markdown",
-  "application/javascript" : "javascript",
-  "unknown/.coffee": "coffee",
-  "text/css" : "css",
-  "text/html" : "html"
-};
-
-var ace_styles = {
-  "application/x-ruby" : "chaos",
-  "application/javascript" : "chaos",
-  "text/css" : "chaos",
-  "text/x-markdown" : "chaos",
-  "text/html" : "chaos",
-  "unknown/.coffee" : "chaos"
-};
-
-
-// File Pane
-
-function App(){
+function App( cfg ){
 
   // initialize properties
   this.files = [];
   this.editors = {};
+  this.cfg = cfg;
 
   // keybinding save
   var self = this;
@@ -49,7 +26,8 @@ function App(){
     window.open( '/file/' + self.editor.fn,'_new');
   });
 
-
+  // install thema
+  $('#theme').attr('href', "/themes/" + this.cfg.theme);
 
 }
 
@@ -86,21 +64,27 @@ App.prototype.new_editor = function( editor_name, fn, mime, txt ){
 
   // configure ace editor
   var ace_editor = ace.edit( editor_name );
-  ace_editor.setTheme( "ace/theme/" + ace_styles[mime] );
-  ace_editor.setFontSize( "16px" );
+  ace_editor.setTheme( "ace/theme/" + this.cfg.aceStyles[ mime ] );
+  ace_editor.setFontSize( this.cfg.aceTweaks.fontSize );
   ace_editor.setShowPrintMargin( false );
   ace_editor.setReadOnly( false );
   var session = ace_editor.getSession();
-  session.setMode( "ace/mode/" + ace_modes[ mime ]  );
+  session.setMode( "ace/mode/" + this.cfg.aceModes[ mime ]  );
   session.setUseWrapMode( true );
   session.setUseSoftTabs( true );
-  $( "#" + editor_name ).css( "line-height", "26px" );
+  $( "#" + editor_name ).css( "line-height", this.cfg.aceTweaks.lineHeight );
 
-  // set the current value
-  ace_editor.setValue( txt, -1 );
-
+  
   var status = { ace: ace_editor, modified: false, fn: fn, mime: mime, txt: txt };
-
+  
+  // Hookup firebase if configured
+  if( this.cfg.firebase && this.cfg.firebase !== "" ){
+    status.ref = (new Firebase( this.cfg.firebase )).child( fn.replace(/\./g, '-dot-') );
+    status.firepad = Firepad.fromACE( status.ref, ace_editor, { defaultText: txt });
+  } else {
+    ace_editor.setValue( txt, -1 );
+  }
+  
   // detect dirty
   var self = this;
   ace_editor.on('change', function(){
@@ -109,7 +93,7 @@ App.prototype.new_editor = function( editor_name, fn, mime, txt ){
       self.redraw_editor();
     }
   });
-
+  
   return status;
 
 };
@@ -162,7 +146,7 @@ App.prototype.save = function(){
         data: self.editors[k].ace.getValue(),
         success: function(){
           if( window.location.pathname === "/meta/" && self.editors[k].fn.substr(0,14) === "public/themes/" ){
-            $('#theme').attr('href', self.editors[k].fn.substr(6) + "?" + Date.now() );                        
+            $('#theme').attr('href', self.editors[k].fn.substr(6) + "?" + Date.now() );
           }
         }
       });
@@ -240,5 +224,6 @@ App.prototype.redraw_files = function(){
 
 
 };
-
-window.app = new App();
+$.get('/config.json', function( config ){
+  window.app = new App( config );
+});

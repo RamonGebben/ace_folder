@@ -6,12 +6,12 @@
   
 /* css reset */
 *, *:before, *:after {
-  box-sizing: border-box; 
+  box-sizing: border-box;  
   -webkit-box-sizing: border-box;
 } 
 
 html, body {
-  margin: 0;
+  margin: 0; 
   padding: 0;
   background: url("/bg.png"); 
 }
