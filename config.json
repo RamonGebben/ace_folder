@@ -1,0 +1,34 @@
+{
+
+  "firebase": "",
+
+  "theme": "default.css",
+  "aceTweaks": {
+      "lineHeight" : "20px",
+      "fontSize" : "16px"
+  },
+  "minimalFolderNames": true,
+  "folded": false,
+
+  "aceStyles": {
+      "application/x-ruby" : "chaos",
+      "application/javascript" : "chaos",
+      "application/x-yaml" : "chaos",
+      "text/css" : "chaos",
+      "text/x-markdown" : "chaos",
+      "text/html" : "chaos",
+      "unknown/.coffee" : "chaos",
+      "unknown/.json": "chaos"
+  },
+
+ "aceModes": {
+        "application/x-ruby" : "ruby",
+        "application/x-yaml" : "yaml",
+        "text/x-markdown" : "markdown",
+        "application/javascript" : "javascript",
+        "text/css" : "css",
+        "text/html" : "liquid",
+        "unknown/.json": "json"
+  }
+
+}

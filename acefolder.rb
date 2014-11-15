@@ -5,14 +5,22 @@ require 'pathname'
 
 # set to whichever folder you want to edit
 set :acefolder, 'demo/'
+set :blacklist, '_site img mp4 theme-assets'.split
 
 def collect_mime( fn )
   return "folder" if File.directory?( fn )
   return MimeMagic.by_magic( fn ) || MimeMagic.by_path( fn )  || "unknown/" + File.extname( fn )
 end
 
+def collect_files( folder, blacklist )
+  Dir.glob( folder + "**/*")
+             .reject{ |fn| File.directory?( fn ) || blacklist.any?{ |bw| fn.start_with?( settings.acefolder + bw ) } }
+             .sort
+             .group_by{ |fn| File.dirname( fn ) }
+end
+
 use Rack::Auth::Basic, "Restricted Area" do |username, password|
-  username == 'demo' and password == 'scaffold'
+  username == 'demo' and password == 'demo'
 end
 
 get '/' do
@@ -20,7 +28,7 @@ get '/' do
 end
 
 get '/structure' do
-  files = Dir.glob( settings.acefolder + "**/*").reject{ |fn| File.directory?( fn ) }.group_by{ |fn| File.dirname( fn ) }
+  files = collect_files( settings.acefolder, settings.blacklist )
   files.each do |p,ff|
     files[p] = ff.collect{ |fn| { fn: fn , mime:  collect_mime( fn ) } }
   end
@@ -45,7 +53,7 @@ get '/meta/' do
 end
 
 get '/meta/structure' do
-  files = Dir.glob( "public/**/*").reject{ |fn| File.directory?( fn ) }.group_by{ |fn| File.dirname( fn ) }
+  files = collect_files("public",[])
   files.each do |p,ff|
     files[p] = ff.collect{ |fn| { fn: fn , mime:  collect_mime( fn ) } }
   end

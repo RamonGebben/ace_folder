@@ -1,0 +1,56 @@
+/* Fonts */
+
+@import url(http://fonts.googleapis.com/css?family=Ubuntu+Condensed);
+@import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono);
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro);
+@import url(http://fonts.googleapis.com/css?family=Monda);
+@import url('/icons.css');
+
+/*@import url('/icons.css');*/
+
+/* css reset */
+
+*, *:before, *:after { box-sizing: border-box; -webkit-box-sizing: border-box; }
+html, body {  margin: 0; padding: 0; font-family: 'Monda', sans; font-size: 16px; background-color: black; }
+.editor { font-family: 'Ubuntu Mono', monospace; }
+ 
+/* scroll bars in chrome */
+ 
+::-webkit-scrollbar { height: 2px; width: 4px; background: #000;  }
+::-webkit-scrollbar-thumb { background: green; -webkit-border-radius: 0px; border-left: 1px solid black; border-right: 1px solid black; }
+::-webkit-scrollbar-corner { background: #000; }
+
+/* layout */
+
+#files, .editor, #nav, #preview { position: fixed; } 
+.editor { top: 0px; left: 0px; right: 250px; bottom: 0px;  }
+#nav { top: 0px; left: 0px; right: 250px; }
+#files { right: 0px; width: 250px; bottom: 0px; top: 0px; overflow: auto; }
+
+
+/* navbar */
+
+#nav { display: none; }
+
+/* file pane */
+  
+#files { background-color: #333; border-left: 2px solid #666;}
+#files { background-repeat: no-repeat; padding-top: 0px;}
+
+.file { padding-left: 15px; color: #999; line-height: 26px; cursor: pointer; height: 0px; overflow: hidden; }
+.file.selected { height: auto; color: lime; background-color: #444; text-shadow: 0px 0px 3px #666; }
+.file.modified { height: auto; color: #ff3366  ; text-shadow: 0px 0px 3px #666; }
+.folder.open .file { height: auto; }
+
+.folder { padding-bottom: 7px; }
+.folder h3 { padding-left: 15px; color: white; cursor: pointer; margin: 0px; padding-top: 13px; }
+.folder h3 em { display: none; }
+.file:hover, .folder h3:hover { color: cyan; }
+
+/* editor */
+
+.editor { display: none;  }
+.editor.active { display: block; }
+.editor.modified {  }
+
+
