@@ -27,7 +27,7 @@ html, body {  margin: 0; padding: 0; font-family: 'Ubuntu Condensed', sans; font
 #nav { display: none; }
 
 /* file pane */
- 
+  
 #files { background-color: #333; border-left: 1px solid #555; }
 .file { padding-left: 15px; color: #999; line-height: 26px; cursor: pointer; height: 0px; overflow: hidden; }
 .file.selected { height: auto; color: lime; background-color: #444; }

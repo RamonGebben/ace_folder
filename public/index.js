@@ -4,6 +4,15 @@ function App( cfg ){
   this.files = [];
   this.editors = {};
   this.cfg = cfg;
+  this.dirty = {};
+  
+  if( this.cfg.firebase && this.cfg.firebase !== "" ){
+    this.firebase =  new Firebase( this.cfg.firebase );  
+    this.firebase.child('dirty').on('value', function( snapshot ){      
+      self.dirty = snapshot.val() || {};
+      self.redraw_editor(); 
+    }); 
+  } 
 
   // keybinding save
   var self = this;
@@ -74,25 +83,32 @@ App.prototype.new_editor = function( editor_name, fn, mime, txt ){
   session.setUseSoftTabs( true );
   $( "#" + editor_name ).css( "line-height", this.cfg.aceTweaks.lineHeight );
 
-  
-  var status = { ace: ace_editor, modified: false, fn: fn, mime: mime, txt: txt };
-  
-  // Hookup firebase if configured
-  if( this.cfg.firebase && this.cfg.firebase !== "" ){
-    status.ref = (new Firebase( this.cfg.firebase )).child( fn.replace(/\./g, '-dot-') );
-    status.firepad = Firepad.fromACE( status.ref, ace_editor, { defaultText: txt });
-  } else {
-    ace_editor.setValue( txt, -1 );
-  }
+  var status = { ace: ace_editor, fn: fn, mime: mime, txt: txt, editor_name: editor_name };
   
   // detect dirty
   var self = this;
-  ace_editor.on('change', function(){
-    if( !status.modified ){
-      status.modified = true;
-      self.redraw_editor();
-    }
-  });
+  
+  // Hookup firebase if configured
+  if( this.firebase ){
+    status.ref = this.firebase.child("files").child( editor_name );
+    status.firepad = Firepad.fromACE( status.ref, ace_editor, { defaultText: txt });
+    status.firepad.on('ready', function(){
+        ace_editor.on('change', function(){
+            var keyval = {};
+            keyval[ editor_name ] = true;
+            self.firebase.child('dirty').update(keyval);
+        });
+    });
+  } else {
+    ace_editor.setValue( txt, -1 );
+    ace_editor.on('change', function(){
+        var dirty = ace_editor.getValue() !== txt;
+        if( self.dirty[ editor_name] !== dirty ){
+            self.dirty[ editor_name ] = dirty;
+            self.redraw_editor();
+        } 
+    });
+  }
   
   return status;
 
@@ -137,22 +153,30 @@ App.prototype.load = function( fn, mime ){
 // saves currentFile to server
 App.prototype.save = function(){
   var self = this;
-  Object.keys( this.editors ).forEach( function(k){
-    if( self.editors[k].modified ){
+  var k = self.editor.editor_name;
+    if( self.dirty[k] ){
+      var newtxt = self.editors[k].ace.getValue();
       $.ajax({
         type: "PUT",
         contentType: "text/plain",
         url: "/file/" + self.editors[k].fn,
-        data: self.editors[k].ace.getValue(),
+        data: newtxt,
         success: function(){
-          if( window.location.pathname === "/meta/" && self.editors[k].fn.substr(0,14) === "public/themes/" ){
-            $('#theme').attr('href', self.editors[k].fn.substr(6) + "?" + Date.now() );
+          var fn = self.editors[k].fn;
+          if( window.location.pathname === "/meta/" && fn.substr(0,14) === "public/themes/" ){
+            $('#theme').attr('href', fn.substr(6) + "?" + Date.now() );
           }
+          
         }
       });
-      self.editors[k].modified = false;
+      if( self.firebase ){
+        var keyval = {}; 
+        keyval[ k ] = false;
+        self.firebase.child('dirty').update( keyval );
+      } else {
+        self.dirty[k] = false;
+      }
     }
-  });
   this.redraw_editor();
 };
 
@@ -160,16 +184,18 @@ App.prototype.save = function(){
 App.prototype.redraw_editor = function(){
   var self = this;
 
-  // update url
-  window.location.hash = this.editor.fn;
+  if( this.editor ){
 
-  // update window title
-  document.title = this.editor.fn
+    window.location.hash = this.editor.fn;
+    document.title = this.editor.fn
 
-  // update navigation
-  $('#nav').text( this.editor.fn ).append( this.editor.modified ? "<em>modified</em>" : "<em>original<em>" ).append( "<strong>" + this.editor.mime + "</strong>" );
-  if( this.editor.modified ) $('#nav').addClass('modified'); else $('#nav').removeClass('modified');
-  if( this.editor.modified ) $('.editor.active').addClass('modified'); else $('.editor.active').removeClass('modified');
+    // update navigation
+    var editor_name = this.editor_editor_name;
+    $('#nav').text( this.editor.fn ).append( this.dirty[ this.editor.editor_name ] ? "<em>modified</em>" : "<em>original<em>" ).append( "<strong>" + this.editor.mime + "</strong>" );
+    if( this.dirty[ editor_name ] ) $('#nav').addClass('modified'); else $('#nav').removeClass('modified');
+    if( this.dirty[ editor_name ] ) $('.editor.active').addClass('modified'); else $('.editor.active').removeClass('modified');
+
+  }
 
   // update file pane
   $('#files .file').removeClass('selected');
@@ -179,29 +205,32 @@ App.prototype.redraw_editor = function(){
     if( url === self.editor.fn ){
       $(e).addClass('selected');
     }
-    for( var k in self.editors ){
-      var editor = self.editors[k];
-      if( url === editor.fn && editor.modified ){
-        $(e).addClass('modified');
+    for( var k in self.dirty ){
+      if( self.dirty[k] ){
+        var editor_name = "editor_" + url.split('/').join('-slash-').split('.').join('-dot-');      
+        if( editor_name === k ) $(e).addClass('modified');
       }
     }
 
   });
 
-
-
 }
 
 // call whenever App.files changes
-App.prototype.redraw_files = function(){
-  var self = this;
-
-  // reset it all
-  $('#files').html('');
+App.prototype.redraw_files = function(){ 
+  var self = this; 
+ 
+  // reset it all 
+  $('#files').html(''); 
 
   // adding folders and files
   Object.keys( this.files ).sort().forEach( function( pathname ){
-    var folder = $( "<div class='folder' data-url='" + pathname + "'><h3>" + pathname + "<em>" + self.files[ pathname ].length + "</em></h3></div>").appendTo( "#files" );
+    var pretty_pathname = pathname;
+    if( self.cfg.minimalFolderNames ){
+        pretty_pathname = pathname.split('/'); 
+        pretty_pathname = pretty_pathname[ pretty_pathname.length-1 ];
+    }
+    var folder = $( "<div class='folder" + ( self.cfg.folded ? "" : " open" ) + "' data-url='" + pathname + "'><h3>" + pretty_pathname + "<em>" + self.files[ pathname ].length + "</em></h3></div>").appendTo( "#files" );
     self.files[ pathname ].forEach( function( file ){
       var name = file.fn.substr( pathname.length + 1 );
       $( folder ).append( $( "<div class='file' data-url='" + file.fn + "' data-mime='" + file.mime + "'>" ).text( name ) );
@@ -212,7 +241,7 @@ App.prototype.redraw_files = function(){
   $('.folder h3').click(function(){
     $( this ).parent().toggleClass('open');
   });
-
+ 
   // adding 'open' behavior
   $("#files .file").click( function( e ){
     self.load( $(e.target).data('url'), $(e.target).data('mime') );
