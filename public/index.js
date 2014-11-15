@@ -276,12 +276,13 @@ App.prototype.toggleConsole = function() {
   if (open) {
       $('#console').css('top', '0px');
   }else {
-      $('#console').css('top', '-600px');
+      $('#console').css('top', '-615px');
   }
 };
 
 App.prototype.help = function(){
-  return "Create a file => app.create('path/to/file.js')";
+  var help_menu = "Create a file => app.create('path/to/file.js')";
+  return help_menu;
 };
 
 
