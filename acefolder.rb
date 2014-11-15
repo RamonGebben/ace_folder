@@ -35,3 +35,28 @@ put '/file/*' do
   File.write( params[:splat].first, request.body.read.to_s )
   "OK"
 end
+
+post '/file/create' do
+  `touch #{settings.acefolder}/#{params[:filepath]}`
+end
+
+get '/meta/' do
+  File.read( "public/index.html" )
+end
+
+get '/meta/structure' do
+  files = Dir.glob( "public/**/*").reject{ |fn| File.directory?( fn ) }.group_by{ |fn| File.dirname( fn ) }
+  files.each do |p,ff|
+    files[p] = ff.collect{ |fn| { fn: fn , mime:  collect_mime( fn ) } }
+  end
+  return files.to_json
+end
+
+get '/meta/file/*' do
+  File.read( params[:splat].first )
+end
+
+put '/meta/file/*' do
+  File.write( params[:splat].first, request.body.read.to_s )
+  "OK"
+end

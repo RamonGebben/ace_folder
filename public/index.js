@@ -20,6 +20,8 @@ var ace_styles = {
 };
 
 
+var open = false;
+
 // File Pane
 
 function App(){
@@ -73,7 +75,7 @@ App.prototype.redirect = function(){
 // collects new structure from server
 App.prototype.refresh = function(){
   var self = this;
-  $.get( "/structure", function( data ) {
+  $.get( "structure", function( data ) {
     self.files = JSON.parse( data );
     self.redraw_files();
     if( !self.currentFile && window.location.hash !== "" ) self.redirect();
@@ -152,19 +154,41 @@ App.prototype.load = function( fn, mime ){
 
 // saves currentFile to server
 App.prototype.save = function(){
-  for( var k in this.editors ){
-    if( this.editors[k].modified ){
+  var self = this;
+  Object.keys( this.editors ).forEach( function(k){
+    if( self.editors[k].modified ){
       $.ajax({
         type: "PUT",
         contentType: "text/plain",
-        url: "/file/" + this.editors[k].fn,
-        data: this.editors[k].ace.getValue()
+        url: "/file/" + self.editors[k].fn,
+        data: self.editors[k].ace.getValue(),
+        success: function(){
+          if( window.location.pathname === "/meta/" && self.editors[k].fn.substr(0,14) === "public/themes/" ){
+            $('#theme').attr('href', self.editors[k].fn.substr(6) + "?" + Date.now() );
+          }
+        }
       });
-      this.editors[k].modified = false;
+      self.editors[k].modified = false;
     }
-  }
+  });
   this.redraw_editor();
 };
+
+
+App.prototype.create = function( filepath ){
+  var self = this;
+  $.ajax({
+    type: "POST",
+    contentType: "text/plain",
+    url: "/file/create?filepath=" + filepath,
+    data: "",
+      success: function(){
+        console.log('created a new file');
+        window.location.reload();
+      }
+    });
+};
+
 
 // call whenever currentFile changes
 App.prototype.redraw_editor = function(){
@@ -174,7 +198,7 @@ App.prototype.redraw_editor = function(){
   window.location.hash = this.editor.fn;
 
   // update window title
-  document.title = this.editor.fn
+  document.title = this.editor.fn;
 
   // update navigation
   $('#nav').text( this.editor.fn ).append( this.editor.modified ? "<em>modified</em>" : "<em>original<em>" ).append( "<strong>" + this.editor.mime + "</strong>" );
@@ -200,7 +224,7 @@ App.prototype.redraw_editor = function(){
 
 
 
-}
+};
 
 // call whenever App.files changes
 App.prototype.redraw_files = function(){
@@ -235,4 +259,46 @@ App.prototype.redraw_files = function(){
 
 };
 
+App.prototype.toggleConsole = function() {
+  open = !open;
+  if (open) {
+      $('#console').css('top', '0px');
+  }else {
+      $('#console').css('top', '-600px');
+  }
+};
+
 window.app = new App();
+
+
+
+
+jQuery(function($, undefined) {
+    $('#console').terminal(function(command, term) {
+        if (command !== '') {
+            try {
+                var result = window.eval(command);
+                if (result !== undefined) {
+                    term.echo(new String(result));
+                }
+            } catch(e) {
+                term.error(new String(e));
+            }
+        } else {
+           term.echo('');
+        }
+    }, {
+        greetings: 'Javascript console',
+        name: 'js_console',
+        height: 600,
+        prompt: '$ » '});
+});
+
+
+$(document).ready(function(){
+
+  key('esc', function(){
+    app.toggleConsole();
+  });
+
+});

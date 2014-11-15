@@ -2,8 +2,7 @@
 
 @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro);
 @import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono);
-
-@import url('icons.css');
+@import url('/icons.css');
 
 /* css reset */
 *, *:before, *:after {
@@ -14,7 +13,7 @@
 html, body {
   margin: 0;
   padding: 0;
-  background: url("bg.png");
+  background: url("/bg.png");
 }
 
 /* scroll bars in chrome */
@@ -63,6 +62,17 @@ body {
 .editor.modified {
   opacity: 1;
 }
+
+#console {
+  position: absolute;
+  top: -600px; right: 0; left: 0;
+  z-index: 4000;
+  opacity: 0.9;
+  color: lime;
+  transition: top .2s ease-out;
+  box-shadow: 0 5px 15px #111;
+}
+
 
 #nav {
   bottom: 0px; left: 280px; right: 0px;

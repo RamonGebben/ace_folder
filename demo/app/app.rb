@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+def example
+    puts "Hello, world #{ 3 + 4 }"
+end
+=======
 require 'sinatra'
 require 'json'
 require 'mimemagic'
@@ -35,3 +40,4 @@ put '/file/*' do
   File.write( params[:splat].first, request.body.read.to_s )
   "OK"
 end
+>>>>>>> 6c53eba4b884ba1495519abfde81216d1d6102b7
