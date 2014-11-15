@@ -280,6 +280,10 @@ App.prototype.toggleConsole = function() {
   }
 };
 
+App.prototype.help = function(){
+  return "Create a file => app.create('path/to/file.js')";
+};
+
 
 jQuery(function($, undefined) {
     $('#console').terminal(function(command, term) {
@@ -296,7 +300,7 @@ jQuery(function($, undefined) {
            term.echo('');
         }
     }, {
-        greetings: 'Javascript console',
+        greetings: 'Javascript console, use app.help() for help.',
         name: 'js_console',
         height: 600,
         prompt: '$ » '});
