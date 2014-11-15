@@ -1,4 +1,5 @@
-var open = false;
+var consoleOpen = false;
+var previewOpen = false;
 
 function App( cfg ){
 
@@ -79,6 +80,9 @@ App.prototype.new_editor = function( editor_name, fn, mime, txt ){
   ace_editor.setFontSize( this.cfg.aceTweaks.fontSize );
   ace_editor.setShowPrintMargin( false );
   ace_editor.setReadOnly( false );
+  ace_editor.setOptions({
+    enableBasicAutocompletion: true
+  });
   var session = ace_editor.getSession();
   session.setMode( "ace/mode/" + this.cfg.aceModes[ mime ]  );
   session.setUseWrapMode( true );
@@ -179,6 +183,7 @@ App.prototype.save = function(){
       }
     }
   this.redraw_editor();
+  if( previewOpen === true ) this.refresh_preview();
 };
 
 
@@ -191,7 +196,7 @@ App.prototype.create = function( filepath ){
     data: "",
       success: function(){
         console.log('created a new file');
-        window.location.reload();
+        self.refresh();
       }
     });
 };
@@ -272,12 +277,42 @@ App.prototype.redraw_files = function(){
 };
 
 App.prototype.toggleConsole = function() {
-  open = !open;
-  if (open) {
+  consoleOpen = !consoleOpen;
+  if (consoleOpen) {
       $('#console').css('top', '0px');
   }else {
       $('#console').css('top', '-615px');
   }
+};
+
+App.prototype.togglePreview = function() {
+  self = this;
+  previewOpen = !previewOpen;
+  if (previewOpen) {
+      self.openPreview();
+  }else {
+      self.closePreview();
+  }
+};
+
+App.prototype.openPreview = function(){
+  console.log('opening fucking preview bitch!');
+  var hash = window.location.hash;
+  hash = hash.split('#');
+  var url = hash[1];
+  $('.editor').css('left', '50%');
+  $('body').append( '<iframe id="preview" src="/file/'+ url +'"></iframe>' );
+};
+
+App.prototype.closePreview = function(){
+  console.log('closing fucking preview bitch!');
+  $('.editor').css('left', '0');
+  $('.preview').remove();
+};
+
+App.prototype.refresh_preview = function(){
+  document.getElementById('preview').contentWindow.location.reload(true);
+  console.log('preview refreshing');
 };
 
 App.prototype.help = function(){
@@ -309,6 +344,10 @@ jQuery(function($, undefined) {
 
 
 $(document).ready(function(){
+
+  key('⌘+return, ctrl+return', function(){
+    app.togglePreview();
+  });
 
   key('esc', function(){
     app.toggleConsole();
