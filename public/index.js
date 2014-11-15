@@ -80,9 +80,6 @@ App.prototype.new_editor = function( editor_name, fn, mime, txt ){
   ace_editor.setFontSize( this.cfg.aceTweaks.fontSize );
   ace_editor.setShowPrintMargin( false );
   ace_editor.setReadOnly( false );
-  ace_editor.setOptions({
-    enableBasicAutocompletion: true
-  });
   var session = ace_editor.getSession();
   session.setMode( "ace/mode/" + this.cfg.aceModes[ mime ]  );
   session.setUseWrapMode( true );
@@ -296,16 +293,19 @@ App.prototype.togglePreview = function() {
 };
 
 App.prototype.openPreview = function(){
-  console.log('opening fucking preview bitch!');
   var hash = window.location.hash;
   hash = hash.split('#');
   var url = hash[1];
   $('.editor').css('left', '50%');
-  $('body').append( '<iframe id="preview" src="/file/'+ url +'"></iframe>' );
+  if( hash === "") {
+    console.log('Please select a file to preview first.');
+  }else {
+    $('body').append( '<iframe id="preview" src="/file/'+ url +'"></iframe>' );
+  }
+
 };
 
 App.prototype.closePreview = function(){
-  console.log('closing fucking preview bitch!');
   $('.editor').css('left', '0');
   $('.preview').remove();
 };
@@ -341,6 +341,7 @@ jQuery(function($, undefined) {
         height: 600,
         prompt: '$ » '});
 });
+
 
 
 $(document).ready(function(){

@@ -1,0 +1,137 @@
+.ace-chaos {
+  background-color: #151718;
+  color: #E6E1DC;
+}
+
+.ace-chaos .ace_cursor {
+  border-left: 2px solid #FFFFFF;
+}
+.ace-chaos .ace_cursor.ace_overwrite {
+  border-left: 0px;
+  border-bottom: 1px solid #FFFFFF;
+}
+.ace-chaos .ace_marker-layer .ace_selection {
+  background: #494836;
+}
+.ace-chaos .ace_marker-layer .ace_step {
+  background: rgb(198, 219, 174);
+}
+.ace-chaos .ace_marker-layer .ace_bracket {
+  margin: -1px 0 0 -1px;
+  text-decoration: underline;
+}
+.ace-chaos .ace_marker-layer .ace_active-line {
+  background: #333;
+}
+.ace-chaos .ace_gutter-active-line {
+  background-color: #222;
+}
+.ace-chaos .ace_invisible {
+  color: #404040;
+}
+.ace-chaos .ace_keyword {
+  color: #A074C4;
+}
+.ace-chaos .ace_keyword.ace_operator {
+  color: #9FCA56;
+}
+.ace-chaos .ace_constant {
+  color:#1EDAFB;
+}
+.ace-chaos .ace_constant.ace_language {
+  color:#FDC251;
+}
+.ace-chaos .ace_constant.ace_library {
+  color:#8DFF0A;
+}
+.ace-chaos .ace_constant.ace_numeric {
+  color:#58C554;
+}
+.ace-chaos .ace_invalid {
+  color:#FFFFFF;
+  background-color:#990000;
+}
+.ace-chaos .ace_invalid.ace_deprecated {
+  color:#FFFFFF;
+  background-color:#990000;
+}
+.ace-chaos .ace_support {
+  color: #CD3F45;
+}
+.ace-chaos .ace_support.ace_function {
+  color: #CD3F45;
+}
+.ace-chaos .ace_function {
+  color: #55B5DB;
+}
+.ace-chaos .ace_string {
+  color:#54B4DA;
+}
+.ace-chaos .ace_comment {
+  color:#555;
+  font-style:italic;
+  padding-bottom: 0px;
+}
+.ace-chaos .ace_variable {
+  color: #997744;
+}
+.ace-chaos .ace_storage {
+  color: #E6CD69;
+}
+.ace-chaos .ace_meta.ace_tag {
+  color: #55B5DB;
+}
+.ace-chaos .ace_entity.ace_other.ace_attribute-name {
+  color: #C93E43;
+}
+
+span.ace_string.ace_attribute-value.ace_xml {
+  color: #D4D7D6;
+}
+
+.ace-chaos .ace_markup.ace_underline {
+  text-decoration: underline;
+}
+.ace-chaos .ace_fold-widget {
+  text-align: center;
+}
+
+.ace-chaos .ace_fold-widget:hover {
+  color: #777;
+}
+
+.ace-chaos .ace_fold-widget.ace_start,
+.ace-chaos .ace_fold-widget.ace_end,
+.ace-chaos .ace_fold-widget.ace_closed{
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.ace-chaos .ace_fold-widget.ace_start:after {
+  content: '▾'
+}
+
+.ace-chaos .ace_fold-widget.ace_end:after {
+  content: '▴'
+}
+
+.ace-chaos .ace_fold-widget.ace_closed:after {
+  content: '‣'
+}
+
+.ace-chaos .ace_indent-guide {
+  border-right:1px dotted #333;
+  margin-right:-1px;
+}
+
+.ace-chaos .ace_fold {
+  background: #222;
+  border-radius: 3px;
+  color: #7AF;
+  border: none;
+}
+.ace-chaos .ace_fold:hover {
+  background: #CCC;
+  color: #000;
+}
