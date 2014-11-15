@@ -293,6 +293,7 @@ App.prototype.togglePreview = function() {
 };
 
 App.prototype.openPreview = function(){
+  self = this;
   var hash = window.location.hash;
   var url = hash.split('#')[1];
   var mime = url.split('.')[1];
@@ -305,6 +306,7 @@ App.prototype.openPreview = function(){
     if(mime === 'md' || mime === 'markdown') {
       console.log('markdown file');
       $('body').append( '<div id="preview" class="markdown"></div>' );
+      self.render_markdown();
     }else {
       $('body').append( '<iframe id="preview" src="/file/'+ url +'"></iframe>' );
     }
@@ -314,7 +316,7 @@ App.prototype.openPreview = function(){
 
 App.prototype.closePreview = function(){
   $('.editor').css('left', '0');
-  $('.preview').remove();
+  $('#preview').remove();
 };
 
 App.prototype.refresh_preview = function(){
@@ -324,15 +326,22 @@ App.prototype.refresh_preview = function(){
   var editor_name = "editor_" + url.split('/').join('-slash-').split('.').join('-dot-');
 
   if(mime === 'md' || mime === 'markdown') {
-      var editor = ace.edit(editor_name);
-      var markdown = editor.getSession().getValue();
-      var output = marked(markdown);
-      $('#preview').html('');
-      $('#preview').append(output);
+
   }else {
     document.getElementById('preview').contentWindow.location.reload(true);
   }
   console.log('preview refreshing');
+};
+
+
+App.prototype.render_markdown = function(){
+  marked.setOptions({ gfm: true });
+  var editor_name =  "editor_" + window.location.hash.split('#')[1].split('/').join('-slash-').split('.').join('-dot-');
+  var editor = ace.edit(editor_name);
+  var markdown = editor.getSession().getValue();
+  var output = marked(markdown);
+  $('#preview').html('');
+  $('#preview').append(output);
 };
 
 App.prototype.help = function(){
