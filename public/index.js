@@ -294,13 +294,20 @@ App.prototype.togglePreview = function() {
 
 App.prototype.openPreview = function(){
   var hash = window.location.hash;
-  hash = hash.split('#');
-  var url = hash[1];
-  $('.editor').css('left', '50%');
+  var url = hash.split('#')[1];
+  var mime = url.split('.')[1];
+  var editor_name = "editor_" + url.split('/').join('-slash-').split('.').join('-dot-');
+
+  $('#'+ editor_name +'').css('left', '50%');
   if( hash === "") {
     console.log('Please select a file to preview first.');
   }else {
-    $('body').append( '<iframe id="preview" src="/file/'+ url +'"></iframe>' );
+    if(mime === 'md' || mime === 'markdown') {
+      console.log('markdown file');
+      $('body').append( '<div id="preview" class="markdown"></div>' );
+    }else {
+      $('body').append( '<iframe id="preview" src="/file/'+ url +'"></iframe>' );
+    }
   }
 
 };
@@ -311,7 +318,20 @@ App.prototype.closePreview = function(){
 };
 
 App.prototype.refresh_preview = function(){
-  document.getElementById('preview').contentWindow.location.reload(true);
+  var hash = window.location.hash;
+  var url = hash.split('#')[1];
+  var mime = url.split('.')[1];
+  var editor_name = "editor_" + url.split('/').join('-slash-').split('.').join('-dot-');
+
+  if(mime === 'md' || mime === 'markdown') {
+      var editor = ace.edit(editor_name);
+      var markdown = editor.getSession().getValue();
+      var output = marked(markdown);
+      $('#preview').html('');
+      $('#preview').append(output);
+  }else {
+    document.getElementById('preview').contentWindow.location.reload(true);
+  }
   console.log('preview refreshing');
 };
 

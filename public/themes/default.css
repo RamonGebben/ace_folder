@@ -26,10 +26,11 @@ html, body {  margin: 0; padding: 0; font-family: 'Ubuntu Condensed', sans; font
 
 #console { position: absolute; top: -615px; right: 0; left: 0; z-index: 4000; opacity: 0.9; color: lime; transition: top .2s ease-out; box-shadow: 0 5px 15px #111; }
 .cmd span { color: lime; }
+.cmd .prompt { color: yellow; }
 
 .hint { position: absolute; top: 35%; width: 100%; text-align: center; opacity: 0.8; font-size: 60px; z-index: 1; }
 #preview { position: absolute; top: 0; right: 50%; bottom: 0; left: 0; height: 100%; width: 50%; border: none; background-color: #fff; }
-
+#preview.markdown { padding: 20px; }
 /* navbar */
 
 #nav { display: none; }
