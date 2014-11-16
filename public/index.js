@@ -181,6 +181,11 @@ App.prototype.save = function(){
         data: newtxt,
         success: function(){
           var fn = self.editors[k].fn;
+
+          if(self.cfg.s3.enabled === true) {
+            self.put_to_s3( fn );
+          }
+
           if( window.location.pathname === "/meta/" && fn.substr(0,14) === "public/themes/" ){
             $('#theme').attr('href', fn.substr(6) + "?" + Date.now() );
           }
@@ -197,6 +202,11 @@ App.prototype.save = function(){
   this.redraw_editor();
   if( previewOpen === true ) this.refresh_preview();
 };
+
+App.prototype.put_to_s3 = function(){
+  console.log( fn );
+};
+
 
 
 App.prototype.create = function( filepath ){

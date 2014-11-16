@@ -2,6 +2,10 @@
 
   "firebase": "",
 
+  "s3": {
+    "enabled": true
+  },
+
   "theme": "default.css",
   "aceTweaks": {
       "lineHeight" : "20px",

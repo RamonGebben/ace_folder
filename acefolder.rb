@@ -41,6 +41,9 @@ end
 
 put '/file/*' do
   File.write( params[:splat].first, request.body.read.to_s )
+  if params[:s3] => true do
+    
+  end
   "OK"
 end
 
