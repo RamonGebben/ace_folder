@@ -360,15 +360,21 @@ App.prototype.render_markdown = function(){
 
 App.prototype.help = function(){
   var welcome = "##  ..:: Welcome to the help menu ::..  ##";
-  var line = "--------------------------------------------------------";
+  var line = "----------------------------------------------------";
   var open_preview = "Use Preview => cmd+return || ctrl+return";
   var create_a_file = "Create a file => app.create('path/to/file.js')";
 
+  console.info("");
   console.log(welcome);
   console.info(line);
+  console.info("");
+
   console.log(open_preview);
   console.log(create_a_file);
+
+  console.info("");
   console.info(line);
+  console.info("");
 
 };
 
@@ -419,7 +425,7 @@ if (typeof console  != "undefined")
 
 console.log = function(message) {
     console.olog(message);
-    $('#console .terminal-output').append('<div><div style="width: 100%;">»&nbsp;' + message + '</div></div>');
+    $('#console .terminal-output').append('<div><div style="width: 100%;">' + message + '</div></div>');
 };
 console.error = console.debug = console.info =  console.log;
 
