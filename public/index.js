@@ -113,6 +113,8 @@ App.prototype.new_editor = function( editor_name, fn, mime, txt ){
     });
   }
 
+  if(mime === 'text/x-markdown') session.on('change', self.render_markdown);
+
   return status;
 
 };
@@ -304,7 +306,6 @@ App.prototype.openPreview = function(){
     console.log('Please select a file to preview first.');
   }else {
     if(mime === 'md' || mime === 'markdown') {
-      console.log('markdown file');
       $('body').append( '<div id="preview" class="markdown"></div>' );
       self.render_markdown();
     }else {
@@ -330,7 +331,6 @@ App.prototype.refresh_preview = function(){
   }else {
     document.getElementById('preview').contentWindow.location.reload(true);
   }
-  console.log('preview refreshing');
 };
 
 
@@ -343,6 +343,7 @@ App.prototype.render_markdown = function(){
   $('#preview').html('');
   $('#preview').append(output);
 };
+
 
 App.prototype.help = function(){
   var help_menu = "Create a file => app.create('path/to/file.js')";

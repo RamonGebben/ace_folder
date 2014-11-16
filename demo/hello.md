@@ -4,3 +4,5 @@
 - Pizza
 - kebab
 - frietjes
+
+Markdown works as you type now
