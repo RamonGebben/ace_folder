@@ -135,6 +135,14 @@ App.prototype.select_editor = function( editor_name ){
 
 };
 
+App.prototype.image_viewer = function( fn ){
+  console.log( fn );
+  var $viewer = $('<div id="image_viewer">'+
+                    '<img src="' + fn + '" alt="image_viewer">' +
+                  '</div>');
+  console.log($viewer);
+  $('body').append($viewer);
+};
 
 App.prototype.load = function( fn, mime ){
 
@@ -145,14 +153,19 @@ App.prototype.load = function( fn, mime ){
   if( !this.editors [ editor_name ] ){
     var self = this;
     $.get("/file/" + fn, function( txt ){
-      self.editors[ editor_name ] = self.new_editor( editor_name, fn, mime, txt );
-      self.select_editor( editor_name );
+      if(mime === 'image/png '){
+        self.image_viewer( fn );
+      }else {
+        self.editors[ editor_name ] = self.new_editor( editor_name, fn, mime, txt );
+        self.select_editor( editor_name );
+      }
     });
   } else {
     this.select_editor( editor_name );
   }
 
 };
+
 
 
 // saves currentFile to server
@@ -346,8 +359,17 @@ App.prototype.render_markdown = function(){
 
 
 App.prototype.help = function(){
-  var help_menu = "Create a file => app.create('path/to/file.js')";
-  return help_menu;
+  var welcome = "##  ..:: Welcome to the help menu ::..  ##";
+  var line = "--------------------------------------------------------";
+  var open_preview = "Use Preview => cmd+return || ctrl+return";
+  var create_a_file = "Create a file => app.create('path/to/file.js')";
+
+  console.log(welcome);
+  console.info(line);
+  console.log(open_preview);
+  console.log(create_a_file);
+  console.info(line);
+
 };
 
 
@@ -387,5 +409,19 @@ $(document).ready(function(){
   $.get('/config.json', function( config ){
     window.app = new App( config );
   });
+
+// Put console output to terminal
+if (typeof console  != "undefined")
+    if (typeof console.log != 'undefined')
+        console.olog = console.log;
+    else
+        console.olog = function() {};
+
+console.log = function(message) {
+    console.olog(message);
+    $('#console .terminal-output').append('<div><div style="width: 100%;">»&nbsp;' + message + '</div></div>');
+};
+console.error = console.debug = console.info =  console.log;
+
 
 });

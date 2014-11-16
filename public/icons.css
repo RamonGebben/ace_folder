@@ -44,9 +44,9 @@
 
 .file[data-mime*="css"]:before {  color: #29A8DE; content: "\f13c"; }
 .file[data-mime*="html"]:before { color: #F26621; content: "\f121"; }
-.file[data-mime*="md"]:before { color: #755838; content: "\e601"; }
+.file[data-mime*="text/x-markdown"]:before { color: #755838; content: "\e601"; }
 .file[data-mime*="coffee"]:before { color: #A6814F; content: "\e600"; }
-.file[data-mime*="rb"]:before { color: #B42839; content: "\e602"; }
+.file[data-mime*="application/x-ruby"]:before { color: #B42839; content: "\e602"; }
 .file[data-mime*="png"]:before, .file[data-url*=".jpg"]:before { color: #35BAA0; content: "\f03e"; }
 
 .file[data-url*="js"]:before {
