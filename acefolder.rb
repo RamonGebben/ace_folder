@@ -41,8 +41,8 @@ end
 
 put '/file/*' do
   File.write( params[:splat].first, request.body.read.to_s )
-  if params[:s3] => true do
-    
+  if params[:s3] then
+    throw "Pizza"
   end
   "OK"
 end
