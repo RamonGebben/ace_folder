@@ -181,6 +181,11 @@ App.prototype.save = function(){
         data: newtxt,
         success: function(){
           var fn = self.editors[k].fn;
+
+          if(self.cfg.s3.enabled === true) {
+            self.put_to_s3( fn );
+          }
+
           if( window.location.pathname === "/meta/" && fn.substr(0,14) === "public/themes/" ){
             $('#theme').attr('href', fn.substr(6) + "?" + Date.now() );
           }
@@ -197,6 +202,22 @@ App.prototype.save = function(){
   this.redraw_editor();
   if( previewOpen === true ) this.refresh_preview();
 };
+
+App.prototype.put_to_s3 = function(){
+  console.log( fn );
+
+  // $.ajax({
+  //   type: "PUT",
+  //   contentType: "text/plain",
+  //   url: "/file/" + self.editors[k].fn,
+  //   data: newtxt,
+  //   success: function(){
+  //     var fn = self.editors[k].fn;
+  //   }
+  // });
+
+};
+
 
 
 App.prototype.create = function( filepath ){
@@ -378,7 +399,6 @@ App.prototype.help = function(){
 
 };
 
-
 jQuery(function($, undefined) {
     $('#console').terminal(function(command, term) {
         if (command !== '') {
@@ -403,6 +423,24 @@ jQuery(function($, undefined) {
 
 
 $(document).ready(function(){
+
+  context.init({
+    fadeSpeed: 100,
+    filter: function($obj){},
+    above: 'auto',
+    preventDoubleContext: true,
+    compress: false
+  });
+
+  context.attach('.file', [
+    {header: 'File'},
+    {text: 'Move/Rename', href: '#', action: function( e ){
+      console.log('Move/Rename');
+    }},
+    {text: 'Delete', href: '#', action: function( e ){
+      console.log('Delete');
+    }},
+  ]);
 
   key('⌘+return, ctrl+return', function(){
     app.togglePreview();
