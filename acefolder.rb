@@ -3,8 +3,6 @@ require 'json'
 require 'mimemagic'
 require 'pathname'
 
-## edit here?
-# comments are skipped?
 
 # allow in iframe
 set :protection, :except => :frame_options
