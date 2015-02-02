@@ -3,6 +3,13 @@ require 'json'
 require 'mimemagic'
 require 'pathname'
 
+
+# allow in iframe
+set :protection, :except => :frame_options
+
+# Set server to 0.0.0.0
+set :bind, '0.0.0.0'
+
 # set to whichever folder you want to edit
 set :acefolder, 'demo/'
 set :blacklist, '_site img mp4 theme-assets'.split
