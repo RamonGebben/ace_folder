@@ -3,6 +3,7 @@ require 'json'
 require 'mimemagic'
 require 'pathname'
 
+## edit here?
 
 # allow in iframe
 set :protection, :except => :frame_options
