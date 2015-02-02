@@ -30,8 +30,16 @@ use Rack::Auth::Basic, "Restricted Area" do |username, password|
   username == 'demo' and password == 'demo'
 end
 
+
 get '/' do
   File.read( "public/index.html" )
+end
+
+post '/project/:project' do
+  project_folder = params[:project]
+  settings.acefolder = project_folder
+  puts = "==================================================================="
+  puts project_folder
 end
 
 get '/structure' do
